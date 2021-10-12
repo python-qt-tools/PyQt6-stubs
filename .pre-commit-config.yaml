@@ -4,13 +4,13 @@ repos:
     hooks:
       - id: isort
         name: isort (python)
-        args: [ "--profile", "black", "-l 79" ]
+        args: [ "--profile", "black", "-l 10000" ]
 
   - repo: https://github.com/psf/black
     rev: 21.9b0
     hooks:
       - id: black
-        args: [ --safe, --quiet, -l 79 ]
+        args: [ --safe, --quiet, -l 10000 ]
         language_version: python3
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -43,10 +43,10 @@ repos:
         args:
           - "--max-line-length=79"
           - "--max-complexity=18"
-          # E722 (bare except) is handled by pylint
           # W503 (line break before binary operator) that's what black does.
           # E203 (whitespace before ':') that's what black does
-          - "--ignore=E722,W503,E203"
+          # E501 (line-length) don't need this for stubs.
+          - "--ignore=W503,E203,E501"
         types: [ python ]
 
   - repo: local
