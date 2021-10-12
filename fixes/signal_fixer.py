@@ -61,7 +61,10 @@ class SignalFixer(cst.CSTTransformer):
                 # i.e.: QComboBox.highlighted
                 return cst.RemovalSentinel.REMOVE
             self._fixed_signals.append(full_name)
-            stmt = f"{f_name}: typing.ClassVar[QtCore.pyqtSignal]"
+            if self._module.__name__ == "PyQt6.QtCore":
+                stmt = f"{f_name}: typing.ClassVar[pyqtSignal]"
+            else:
+                stmt = f"{f_name}: typing.ClassVar[QtCore.pyqtSignal]"
             node = cst.parse_statement(stmt)
             if original_node.leading_lines:
                 # Copy the leading lines and return them with a

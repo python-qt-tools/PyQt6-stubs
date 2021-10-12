@@ -6,7 +6,6 @@ import sys
 import tempfile
 import zipfile
 
-import isort
 from libcst import parse_module
 
 from fixes.signal_fixer import SignalFixer
@@ -73,6 +72,5 @@ for file in os.listdir("PyQt6-stubs"):
         fhandle.write(modified_tree.code)
 
 # Lint the files with iSort and Black
-for file in os.listdir("PyQt6-stubs"):
-    isort.file(os.path.join("PyQt6-stubs", file))
-subprocess.check_call(["black", "PyQt6-stubs"])
+subprocess.check_call(["isort", "--profile", "black", "-l 79", "PyQt6-stubs"])
+subprocess.check_call(["black", "--safe", "--quiet", "-l 79", "PyQt6-stubs"])
