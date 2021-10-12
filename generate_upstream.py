@@ -5,10 +5,13 @@ import subprocess
 import sys
 import tempfile
 import zipfile
+from collections import defaultdict
+from typing import Dict, List
 
-from libcst import parse_module
+from libcst import MetadataWrapper, parse_module
 from mypy import api
 
+from fixes.sig_match_fixer import SigMatchFixer
 from fixes.signal_fixer import SignalFixer
 
 # Create PyQt6-stubs folder if necessary
@@ -54,6 +57,8 @@ with tempfile.TemporaryDirectory() as temp_dwld_folder:
                     subprocess.check_call(["git", "add", os.path.join("PyQt6-stubs", file)])
 
 # Apply the quick fixes from mypy:
+remove_annotations: Dict[str, List[int]] = defaultdict(list)
+
 for file in os.listdir("PyQt6-stubs"):
     file_to_fix = os.path.join("PyQt6-stubs", file)
 
@@ -82,6 +87,8 @@ for file in os.listdir("PyQt6-stubs"):
             lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
         elif " is incompatible with supertype " in error_msg or " incompatible with return type " in error_msg:
             lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
+        elif " will never be matched: signature " in error_msg:
+            remove_annotations[file.replace(".pyi", "")].append(line_nbr)
     with open(file_to_fix, "w", encoding="utf-8") as fhandle:
         fhandle.writelines(lines)
 
@@ -90,10 +97,13 @@ for file in os.listdir("PyQt6-stubs"):
     print("Fixing signals in " + file)
     path = os.path.join("PyQt6-stubs", file)
     with open(path, "r", encoding="utf-8") as fhandle:
-        stub_tree = parse_module(fhandle.read())
+        stub_tree = MetadataWrapper(parse_module(fhandle.read()))
 
-    transformer = SignalFixer(file.replace(".pyi", ""))
-    modified_tree = stub_tree.visit(transformer)
+    mod_name = file.replace(".pyi", "")
+    sig_match_fixer = SigMatchFixer(mod_name, remove_annotations[mod_name])
+    modified_tree = stub_tree.visit(sig_match_fixer)
+    signal_fixer = SignalFixer(mod_name)
+    modified_tree = modified_tree.visit(signal_fixer)
 
     with open(path, "w", encoding="utf-8") as fhandle:
         fhandle.write(modified_tree.code)
