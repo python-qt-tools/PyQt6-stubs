@@ -78,7 +78,8 @@ for file in os.listdir("PyQt6-stubs"):
 
         if error_msg == 'Overload does not consistently use the "@staticmethod" decorator on all function signatures.':
             lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[misc]\n"
-
+        elif "Signature of" in error_msg and "incompatible with supertype" in error_msg:
+            lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
     with open(file_to_fix, "w", encoding="utf-8") as fhandle:
         fhandle.writelines(lines)
 

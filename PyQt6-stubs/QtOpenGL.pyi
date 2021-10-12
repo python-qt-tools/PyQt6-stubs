@@ -34,27 +34,8 @@ PYQT_SLOT = typing.Union[typing.Callable[..., None], QtCore.pyqtBoundSignal]
 # Convenient aliases for complicated OpenGL types.
 PYQT_OPENGL_ARRAY = typing.Union[typing.Sequence[int], typing.Sequence[float], PyQt6.sip.Buffer, None]
 PYQT_OPENGL_BOUND_ARRAY = typing.Union[typing.Sequence[int], typing.Sequence[float], PyQt6.sip.Buffer, int, None]
-PYQT_SHADER_ATTRIBUTE_ARRAY = typing.Union[
-    typing.Sequence[QtGui.QVector2D],
-    typing.Sequence[QtGui.QVector3D],
-    typing.Sequence[QtGui.QVector4D],
-    typing.Sequence[typing.Sequence[float]],
-]
-PYQT_SHADER_UNIFORM_VALUE_ARRAY = typing.Union[
-    typing.Sequence[QtGui.QVector2D],
-    typing.Sequence[QtGui.QVector3D],
-    typing.Sequence[QtGui.QVector4D],
-    typing.Sequence[QtGui.QMatrix2x2],
-    typing.Sequence[QtGui.QMatrix2x3],
-    typing.Sequence[QtGui.QMatrix2x4],
-    typing.Sequence[QtGui.QMatrix3x2],
-    typing.Sequence[QtGui.QMatrix3x3],
-    typing.Sequence[QtGui.QMatrix3x4],
-    typing.Sequence[QtGui.QMatrix4x2],
-    typing.Sequence[QtGui.QMatrix4x3],
-    typing.Sequence[QtGui.QMatrix4x4],
-    typing.Sequence[typing.Sequence[float]],
-]
+PYQT_SHADER_ATTRIBUTE_ARRAY = typing.Union[typing.Sequence[QtGui.QVector2D], typing.Sequence[QtGui.QVector3D], typing.Sequence[QtGui.QVector4D], typing.Sequence[typing.Sequence[float]]]
+PYQT_SHADER_UNIFORM_VALUE_ARRAY = typing.Union[typing.Sequence[QtGui.QVector2D], typing.Sequence[QtGui.QVector3D], typing.Sequence[QtGui.QVector4D], typing.Sequence[QtGui.QMatrix2x2], typing.Sequence[QtGui.QMatrix2x3], typing.Sequence[QtGui.QMatrix2x4], typing.Sequence[QtGui.QMatrix3x2], typing.Sequence[QtGui.QMatrix3x3], typing.Sequence[QtGui.QMatrix3x4], typing.Sequence[QtGui.QMatrix4x2], typing.Sequence[QtGui.QMatrix4x3], typing.Sequence[QtGui.QMatrix4x4], typing.Sequence[typing.Sequence[float]]]
 
 class QOpenGLBuffer(PyQt6.sip.simplewrapper):
     class RangeAccessFlags(enum.Flag):
@@ -148,19 +129,9 @@ class QOpenGLDebugMessage(PyQt6.sip.simplewrapper):
     @typing.overload
     def __init__(self, debugMessage: "QOpenGLDebugMessage") -> None: ...
     @staticmethod
-    def createThirdPartyMessage(
-        text: str,
-        id: int = ...,
-        severity: "QOpenGLDebugMessage.Severities" = ...,
-        type: "QOpenGLDebugMessage.Types" = ...,
-    ) -> "QOpenGLDebugMessage": ...
+    def createThirdPartyMessage(text: str, id: int = ..., severity: "QOpenGLDebugMessage.Severities" = ..., type: "QOpenGLDebugMessage.Types" = ...) -> "QOpenGLDebugMessage": ...
     @staticmethod
-    def createApplicationMessage(
-        text: str,
-        id: int = ...,
-        severity: "QOpenGLDebugMessage.Severities" = ...,
-        type: "QOpenGLDebugMessage.Types" = ...,
-    ) -> "QOpenGLDebugMessage": ...
+    def createApplicationMessage(text: str, id: int = ..., severity: "QOpenGLDebugMessage.Severities" = ..., type: "QOpenGLDebugMessage.Types" = ...) -> "QOpenGLDebugMessage": ...
     def message(self) -> str: ...
     def id(self) -> int: ...
     def severity(self) -> "QOpenGLDebugMessage.Severities": ...
@@ -179,40 +150,15 @@ class QOpenGLDebugLogger(QtCore.QObject):
     def logMessage(self, debugMessage: QOpenGLDebugMessage) -> None: ...
     def loggedMessages(self) -> typing.List[QOpenGLDebugMessage]: ...
     @typing.overload
-    def disableMessages(
-        self,
-        sources: QOpenGLDebugMessage.Sources = ...,
-        types: QOpenGLDebugMessage.Types = ...,
-        severities: QOpenGLDebugMessage.Severities = ...,
-    ) -> None: ...
+    def disableMessages(self, sources: QOpenGLDebugMessage.Sources = ..., types: QOpenGLDebugMessage.Types = ..., severities: QOpenGLDebugMessage.Severities = ...) -> None: ...
     @typing.overload
-    def disableMessages(
-        self,
-        ids: typing.Iterable[int],
-        sources: QOpenGLDebugMessage.Sources = ...,
-        types: QOpenGLDebugMessage.Types = ...,
-    ) -> None: ...
+    def disableMessages(self, ids: typing.Iterable[int], sources: QOpenGLDebugMessage.Sources = ..., types: QOpenGLDebugMessage.Types = ...) -> None: ...
     @typing.overload
-    def enableMessages(
-        self,
-        sources: QOpenGLDebugMessage.Sources = ...,
-        types: QOpenGLDebugMessage.Types = ...,
-        severities: QOpenGLDebugMessage.Severities = ...,
-    ) -> None: ...
+    def enableMessages(self, sources: QOpenGLDebugMessage.Sources = ..., types: QOpenGLDebugMessage.Types = ..., severities: QOpenGLDebugMessage.Severities = ...) -> None: ...
     @typing.overload
-    def enableMessages(
-        self,
-        ids: typing.Iterable[int],
-        sources: QOpenGLDebugMessage.Sources = ...,
-        types: QOpenGLDebugMessage.Types = ...,
-    ) -> None: ...
+    def enableMessages(self, ids: typing.Iterable[int], sources: QOpenGLDebugMessage.Sources = ..., types: QOpenGLDebugMessage.Types = ...) -> None: ...
     def popGroup(self) -> None: ...
-    def pushGroup(
-        self,
-        name: str,
-        id: int = ...,
-        source: QOpenGLDebugMessage.Sources = ...,
-    ) -> None: ...
+    def pushGroup(self, name: str, id: int = ..., source: QOpenGLDebugMessage.Sources = ...) -> None: ...
     def maximumMessageLength(self) -> int: ...
     def loggingMode(self) -> "QOpenGLDebugLogger.LoggingMode": ...
     def isLogging(self) -> bool: ...
@@ -232,22 +178,9 @@ class QOpenGLFramebufferObject(PyQt6.sip.simplewrapper):
     @typing.overload
     def __init__(self, width: int, height: int, target: int = ...) -> None: ...
     @typing.overload
-    def __init__(
-        self,
-        size: QtCore.QSize,
-        attachment: "QOpenGLFramebufferObject.Attachment",
-        target: int = ...,
-        internal_format: int = ...,
-    ) -> None: ...
+    def __init__(self, size: QtCore.QSize, attachment: "QOpenGLFramebufferObject.Attachment", target: int = ..., internal_format: int = ...) -> None: ...
     @typing.overload
-    def __init__(
-        self,
-        width: int,
-        height: int,
-        attachment: "QOpenGLFramebufferObject.Attachment",
-        target: int = ...,
-        internal_format: int = ...,
-    ) -> None: ...
+    def __init__(self, width: int, height: int, attachment: "QOpenGLFramebufferObject.Attachment", target: int = ..., internal_format: int = ...) -> None: ...
     @typing.overload
     def __init__(self, size: QtCore.QSize, format: "QOpenGLFramebufferObjectFormat") -> None: ...
     @typing.overload
@@ -263,47 +196,16 @@ class QOpenGLFramebufferObject(PyQt6.sip.simplewrapper):
     def takeTexture(self, colorAttachmentIndex: int) -> int: ...
     @typing.overload
     @staticmethod
-    def blitFramebuffer(
-        target: "QOpenGLFramebufferObject",
-        targetRect: QtCore.QRect,
-        source: "QOpenGLFramebufferObject",
-        sourceRect: QtCore.QRect,
-        buffers: int = ...,
-        filter: int = ...,
-    ) -> None: ...
+    def blitFramebuffer(target: "QOpenGLFramebufferObject", targetRect: QtCore.QRect, source: "QOpenGLFramebufferObject", sourceRect: QtCore.QRect, buffers: int = ..., filter: int = ...) -> None: ...
     @typing.overload
     @staticmethod
-    def blitFramebuffer(
-        target: "QOpenGLFramebufferObject",
-        source: "QOpenGLFramebufferObject",
-        buffers: int = ...,
-        filter: int = ...,
-    ) -> None: ...
+    def blitFramebuffer(target: "QOpenGLFramebufferObject", source: "QOpenGLFramebufferObject", buffers: int = ..., filter: int = ...) -> None: ...
     @typing.overload
     @staticmethod
-    def blitFramebuffer(
-        target: "QOpenGLFramebufferObject",
-        targetRect: QtCore.QRect,
-        source: "QOpenGLFramebufferObject",
-        sourceRect: QtCore.QRect,
-        buffers: int,
-        filter: int,
-        readColorAttachmentIndex: int,
-        drawColorAttachmentIndex: int,
-    ) -> None: ...
+    def blitFramebuffer(target: "QOpenGLFramebufferObject", targetRect: QtCore.QRect, source: "QOpenGLFramebufferObject", sourceRect: QtCore.QRect, buffers: int, filter: int, readColorAttachmentIndex: int, drawColorAttachmentIndex: int) -> None: ...
     @typing.overload
     @staticmethod
-    def blitFramebuffer(
-        target: "QOpenGLFramebufferObject",
-        targetRect: QtCore.QRect,
-        source: "QOpenGLFramebufferObject",
-        sourceRect: QtCore.QRect,
-        buffers: int,
-        filter: int,
-        readColorAttachmentIndex: int,
-        drawColorAttachmentIndex: int,
-        restorePolicy: "QOpenGLFramebufferObject.FramebufferRestorePolicy",
-    ) -> None: ...
+    def blitFramebuffer(target: "QOpenGLFramebufferObject", targetRect: QtCore.QRect, source: "QOpenGLFramebufferObject", sourceRect: QtCore.QRect, buffers: int, filter: int, readColorAttachmentIndex: int, drawColorAttachmentIndex: int, restorePolicy: "QOpenGLFramebufferObject.FramebufferRestorePolicy") -> None: ...
     @staticmethod
     def hasOpenGLFramebufferBlit() -> bool: ...
     @staticmethod
@@ -396,16 +298,9 @@ class QOpenGLShader(QtCore.QObject):
         TessellationControl = ...  # type: QOpenGLShader.ShaderType
         TessellationEvaluation = ...  # type: QOpenGLShader.ShaderType
         Compute = ...  # type: QOpenGLShader.ShaderType
-    def __init__(
-        self,
-        type: "QOpenGLShader.ShaderType",
-        parent: typing.Optional[QtCore.QObject] = ...,
-    ) -> None: ...
+    def __init__(self, type: "QOpenGLShader.ShaderType", parent: typing.Optional[QtCore.QObject] = ...) -> None: ...
     @staticmethod
-    def hasOpenGLShaders(
-        type: "QOpenGLShader.ShaderType",
-        context: typing.Optional[QtGui.QOpenGLContext] = ...,
-    ) -> bool: ...
+    def hasOpenGLShaders(type: "QOpenGLShader.ShaderType", context: typing.Optional[QtGui.QOpenGLContext] = ...) -> bool: ...
     def shaderId(self) -> int: ...
     def log(self) -> str: ...
     def isCompiled(self) -> bool: ...
@@ -433,9 +328,7 @@ class QOpenGLShaderProgram(QtCore.QObject):
     def setPatchVertexCount(self, count: int) -> None: ...
     def maxGeometryOutputVertices(self) -> int: ...
     @staticmethod
-    def hasOpenGLShaderPrograms(
-        context: typing.Optional[QtGui.QOpenGLContext] = ...,
-    ) -> bool: ...
+    def hasOpenGLShaderPrograms(context: typing.Optional[QtGui.QOpenGLContext] = ...) -> bool: ...
     @typing.overload
     def setUniformValueArray(self, location: int, values: PYQT_SHADER_UNIFORM_VALUE_ARRAY) -> None: ...
     @typing.overload
@@ -457,11 +350,7 @@ class QOpenGLShaderProgram(QtCore.QObject):
     @typing.overload
     def setUniformValue(self, location: int, value: QtGui.QVector4D) -> None: ...
     @typing.overload
-    def setUniformValue(
-        self,
-        location: int,
-        color: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor],
-    ) -> None: ...
+    def setUniformValue(self, location: int, color: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor]) -> None: ...
     @typing.overload
     def setUniformValue(self, location: int, point: QtCore.QPoint) -> None: ...
     @typing.overload
@@ -507,11 +396,7 @@ class QOpenGLShaderProgram(QtCore.QObject):
     @typing.overload
     def setUniformValue(self, name: str, value: QtGui.QVector4D) -> None: ...
     @typing.overload
-    def setUniformValue(
-        self,
-        name: str,
-        color: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor],
-    ) -> None: ...
+    def setUniformValue(self, name: str, color: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor]) -> None: ...
     @typing.overload
     def setUniformValue(self, name: str, point: QtCore.QPoint) -> None: ...
     @typing.overload
@@ -553,23 +438,9 @@ class QOpenGLShaderProgram(QtCore.QObject):
     @typing.overload
     def enableAttributeArray(self, name: str) -> None: ...
     @typing.overload
-    def setAttributeBuffer(
-        self,
-        location: int,
-        type: int,
-        offset: int,
-        tupleSize: int,
-        stride: int = ...,
-    ) -> None: ...
+    def setAttributeBuffer(self, location: int, type: int, offset: int, tupleSize: int, stride: int = ...) -> None: ...
     @typing.overload
-    def setAttributeBuffer(
-        self,
-        name: str,
-        type: int,
-        offset: int,
-        tupleSize: int,
-        stride: int = ...,
-    ) -> None: ...
+    def setAttributeBuffer(self, name: str, type: int, offset: int, tupleSize: int, stride: int = ...) -> None: ...
     @typing.overload
     def setAttributeArray(self, location: int, values: PYQT_SHADER_ATTRIBUTE_ARRAY) -> None: ...
     @typing.overload
@@ -589,11 +460,7 @@ class QOpenGLShaderProgram(QtCore.QObject):
     @typing.overload
     def setAttributeValue(self, location: int, value: QtGui.QVector4D) -> None: ...
     @typing.overload
-    def setAttributeValue(
-        self,
-        location: int,
-        value: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor],
-    ) -> None: ...
+    def setAttributeValue(self, location: int, value: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor]) -> None: ...
     @typing.overload
     def setAttributeValue(self, name: str, value: float) -> None: ...
     @typing.overload
@@ -609,11 +476,7 @@ class QOpenGLShaderProgram(QtCore.QObject):
     @typing.overload
     def setAttributeValue(self, name: str, value: QtGui.QVector4D) -> None: ...
     @typing.overload
-    def setAttributeValue(
-        self,
-        name: str,
-        value: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor],
-    ) -> None: ...
+    def setAttributeValue(self, name: str, value: typing.Union[QtGui.QColor, QtCore.Qt.GlobalColor]) -> None: ...
     @typing.overload
     def attributeLocation(self, name: QtCore.QByteArray) -> int: ...
     @typing.overload
@@ -913,11 +776,7 @@ class QOpenGLTexture(PyQt6.sip.simplewrapper):
     @typing.overload
     def __init__(self, target: "QOpenGLTexture.Target") -> None: ...
     @typing.overload
-    def __init__(
-        self,
-        image: QtGui.QImage,
-        genMipMaps: "QOpenGLTexture.MipMapGeneration" = ...,
-    ) -> None: ...
+    def __init__(self, image: QtGui.QImage, genMipMaps: "QOpenGLTexture.MipMapGeneration" = ...) -> None: ...
     def comparisonMode(self) -> "QOpenGLTexture.ComparisonMode": ...
     def setComparisonMode(self, mode: "QOpenGLTexture.ComparisonMode") -> None: ...
     def comparisonFunction(self) -> "QOpenGLTexture.ComparisonFunction": ...
@@ -941,21 +800,11 @@ class QOpenGLTexture(PyQt6.sip.simplewrapper):
     @typing.overload
     def setWrapMode(self, mode: "QOpenGLTexture.WrapMode") -> None: ...
     @typing.overload
-    def setWrapMode(
-        self,
-        direction: "QOpenGLTexture.CoordinateDirection",
-        mode: "QOpenGLTexture.WrapMode",
-    ) -> None: ...
+    def setWrapMode(self, direction: "QOpenGLTexture.CoordinateDirection", mode: "QOpenGLTexture.WrapMode") -> None: ...
     def maximumAnisotropy(self) -> float: ...
     def setMaximumAnisotropy(self, anisotropy: float) -> None: ...
-    def minMagFilters(
-        self,
-    ) -> typing.Tuple["QOpenGLTexture.Filter", "QOpenGLTexture.Filter"]: ...
-    def setMinMagFilters(
-        self,
-        minificationFilter: "QOpenGLTexture.Filter",
-        magnificationFilter: "QOpenGLTexture.Filter",
-    ) -> None: ...
+    def minMagFilters(self) -> typing.Tuple["QOpenGLTexture.Filter", "QOpenGLTexture.Filter"]: ...
+    def setMinMagFilters(self, minificationFilter: "QOpenGLTexture.Filter", magnificationFilter: "QOpenGLTexture.Filter") -> None: ...
     def magnificationFilter(self) -> "QOpenGLTexture.Filter": ...
     def setMagnificationFilter(self, filter: "QOpenGLTexture.Filter") -> None: ...
     def minificationFilter(self) -> "QOpenGLTexture.Filter": ...
@@ -964,19 +813,9 @@ class QOpenGLTexture(PyQt6.sip.simplewrapper):
     def setDepthStencilMode(self, mode: "QOpenGLTexture.DepthStencilMode") -> None: ...
     def swizzleMask(self, component: "QOpenGLTexture.SwizzleComponent") -> "QOpenGLTexture.SwizzleValue": ...
     @typing.overload
-    def setSwizzleMask(
-        self,
-        component: "QOpenGLTexture.SwizzleComponent",
-        value: "QOpenGLTexture.SwizzleValue",
-    ) -> None: ...
+    def setSwizzleMask(self, component: "QOpenGLTexture.SwizzleComponent", value: "QOpenGLTexture.SwizzleValue") -> None: ...
     @typing.overload
-    def setSwizzleMask(
-        self,
-        r: "QOpenGLTexture.SwizzleValue",
-        g: "QOpenGLTexture.SwizzleValue",
-        b: "QOpenGLTexture.SwizzleValue",
-        a: "QOpenGLTexture.SwizzleValue",
-    ) -> None: ...
+    def setSwizzleMask(self, r: "QOpenGLTexture.SwizzleValue", g: "QOpenGLTexture.SwizzleValue", b: "QOpenGLTexture.SwizzleValue", a: "QOpenGLTexture.SwizzleValue") -> None: ...
     @typing.overload
     def generateMipMaps(self) -> None: ...
     @typing.overload
@@ -992,205 +831,44 @@ class QOpenGLTexture(PyQt6.sip.simplewrapper):
     @staticmethod
     def hasFeature(feature: "QOpenGLTexture.Features") -> bool: ...
     @typing.overload
-    def setCompressedData(
-        self,
-        mipLevel: int,
-        layer: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        dataSize: int,
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setCompressedData(self, mipLevel: int, layer: int, cubeFace: "QOpenGLTexture.CubeMapFace", dataSize: int, data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setCompressedData(
-        self,
-        mipLevel: int,
-        layer: int,
-        dataSize: int,
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setCompressedData(self, mipLevel: int, layer: int, dataSize: int, data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setCompressedData(
-        self,
-        mipLevel: int,
-        dataSize: int,
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setCompressedData(self, mipLevel: int, dataSize: int, data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setCompressedData(
-        self,
-        dataSize: int,
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setCompressedData(self, dataSize: int, data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setCompressedData(
-        self,
-        mipLevel: int,
-        layer: int,
-        layerCount: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        dataSize: int,
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setCompressedData(self, mipLevel: int, layer: int, layerCount: int, cubeFace: "QOpenGLTexture.CubeMapFace", dataSize: int, data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        mipLevel: int,
-        layer: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, mipLevel: int, layer: int, cubeFace: "QOpenGLTexture.CubeMapFace", sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        mipLevel: int,
-        layer: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, mipLevel: int, layer: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        mipLevel: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, mipLevel: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        image: QtGui.QImage,
-        genMipMaps: "QOpenGLTexture.MipMapGeneration" = ...,
-    ) -> None: ...
+    def setData(self, image: QtGui.QImage, genMipMaps: "QOpenGLTexture.MipMapGeneration" = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        mipLevel: int,
-        layer: int,
-        layerCount: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, mipLevel: int, layer: int, layerCount: int, cubeFace: "QOpenGLTexture.CubeMapFace", sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        xOffset: int,
-        yOffset: int,
-        zOffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, xOffset: int, yOffset: int, zOffset: int, width: int, height: int, depth: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        xOffset: int,
-        yOffset: int,
-        zOffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        mipLevel: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, xOffset: int, yOffset: int, zOffset: int, width: int, height: int, depth: int, mipLevel: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        xOffset: int,
-        yOffset: int,
-        zOffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        mipLevel: int,
-        layer: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, xOffset: int, yOffset: int, zOffset: int, width: int, height: int, depth: int, mipLevel: int, layer: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        xOffset: int,
-        yOffset: int,
-        zOffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        mipLevel: int,
-        layer: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, xOffset: int, yOffset: int, zOffset: int, width: int, height: int, depth: int, mipLevel: int, layer: int, cubeFace: "QOpenGLTexture.CubeMapFace", sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     @typing.overload
-    def setData(
-        self,
-        xOffset: int,
-        yOffset: int,
-        zOffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        mipLevel: int,
-        layer: int,
-        cubeFace: "QOpenGLTexture.CubeMapFace",
-        layerCount: int,
-        sourceFormat: "QOpenGLTexture.PixelFormat",
-        sourceType: "QOpenGLTexture.PixelType",
-        data: PyQt6.sip.voidptr,
-        options: typing.Optional[QOpenGLPixelTransferOptions] = ...,
-    ) -> None: ...
+    def setData(self, xOffset: int, yOffset: int, zOffset: int, width: int, height: int, depth: int, mipLevel: int, layer: int, cubeFace: "QOpenGLTexture.CubeMapFace", layerCount: int, sourceFormat: "QOpenGLTexture.PixelFormat", sourceType: "QOpenGLTexture.PixelType", data: PyQt6.sip.voidptr, options: typing.Optional[QOpenGLPixelTransferOptions] = ...) -> None: ...
     def isTextureView(self) -> bool: ...
-    def createTextureView(
-        self,
-        target: "QOpenGLTexture.Target",
-        viewFormat: "QOpenGLTexture.TextureFormat",
-        minimumMipmapLevel: int,
-        maximumMipmapLevel: int,
-        minimumLayer: int,
-        maximumLayer: int,
-    ) -> "QOpenGLTexture": ...
+    def createTextureView(self, target: "QOpenGLTexture.Target", viewFormat: "QOpenGLTexture.TextureFormat", minimumMipmapLevel: int, maximumMipmapLevel: int, minimumLayer: int, maximumLayer: int) -> "QOpenGLTexture": ...
     def isStorageAllocated(self) -> bool: ...
     @typing.overload
     def allocateStorage(self) -> None: ...
     @typing.overload
-    def allocateStorage(
-        self,
-        pixelFormat: "QOpenGLTexture.PixelFormat",
-        pixelType: "QOpenGLTexture.PixelType",
-    ) -> None: ...
+    def allocateStorage(self, pixelFormat: "QOpenGLTexture.PixelFormat", pixelType: "QOpenGLTexture.PixelType") -> None: ...
     def faces(self) -> int: ...
     def layers(self) -> int: ...
     def setLayers(self, layers: int) -> None: ...
@@ -1232,27 +910,13 @@ class QOpenGLTextureBlitter(PyQt6.sip.simplewrapper):
         OriginTopLeft = ...  # type: QOpenGLTextureBlitter.Origin
     def __init__(self) -> None: ...
     @staticmethod
-    def sourceTransform(
-        subTexture: QtCore.QRectF,
-        textureSize: QtCore.QSize,
-        origin: "QOpenGLTextureBlitter.Origin",
-    ) -> QtGui.QMatrix3x3: ...
+    def sourceTransform(subTexture: QtCore.QRectF, textureSize: QtCore.QSize, origin: "QOpenGLTextureBlitter.Origin") -> QtGui.QMatrix3x3: ...
     @staticmethod
     def targetTransform(target: QtCore.QRectF, viewport: QtCore.QRect) -> QtGui.QMatrix4x4: ...
     @typing.overload
-    def blit(
-        self,
-        texture: int,
-        targetTransform: QtGui.QMatrix4x4,
-        sourceOrigin: "QOpenGLTextureBlitter.Origin",
-    ) -> None: ...
+    def blit(self, texture: int, targetTransform: QtGui.QMatrix4x4, sourceOrigin: "QOpenGLTextureBlitter.Origin") -> None: ...
     @typing.overload
-    def blit(
-        self,
-        texture: int,
-        targetTransform: QtGui.QMatrix4x4,
-        sourceTransform: QtGui.QMatrix3x3,
-    ) -> None: ...
+    def blit(self, texture: int, targetTransform: QtGui.QMatrix4x4, sourceTransform: QtGui.QMatrix3x3) -> None: ...
     def setOpacity(self, opacity: float) -> None: ...
     def setRedBlueSwizzle(self, swizzle: bool) -> None: ...
     def release(self) -> None: ...
@@ -1297,10 +961,7 @@ class QOpenGLVersionFunctionsFactory(PyQt6.sip.simplewrapper):
     @typing.overload
     def __init__(self, a0: "QOpenGLVersionFunctionsFactory") -> None: ...
     @staticmethod
-    def get(
-        versionProfile: "QOpenGLVersionProfile" = ...,
-        context: typing.Optional[QtGui.QOpenGLContext] = ...,
-    ) -> QAbstractOpenGLFunctions: ...
+    def get(versionProfile: "QOpenGLVersionProfile" = ..., context: typing.Optional[QtGui.QOpenGLContext] = ...) -> QAbstractOpenGLFunctions: ...
 
 class QOpenGLVertexArrayObject(QtCore.QObject):
     class Binder(PyQt6.sip.simplewrapper):
@@ -1323,18 +984,9 @@ class QOpenGLWindow(QtGui.QPaintDeviceWindow):
         PartialUpdateBlit = ...  # type: QOpenGLWindow.UpdateBehavior
         PartialUpdateBlend = ...  # type: QOpenGLWindow.UpdateBehavior
     @typing.overload
-    def __init__(
-        self,
-        updateBehavior: "QOpenGLWindow.UpdateBehavior" = ...,
-        parent: typing.Optional[QtGui.QWindow] = ...,
-    ) -> None: ...
+    def __init__(self, updateBehavior: "QOpenGLWindow.UpdateBehavior" = ..., parent: typing.Optional[QtGui.QWindow] = ...) -> None: ...
     @typing.overload
-    def __init__(
-        self,
-        shareContext: QtGui.QOpenGLContext,
-        updateBehavior: "QOpenGLWindow.UpdateBehavior" = ...,
-        parent: typing.Optional[QtGui.QWindow] = ...,
-    ) -> None: ...
+    def __init__(self, shareContext: QtGui.QOpenGLContext, updateBehavior: "QOpenGLWindow.UpdateBehavior" = ..., parent: typing.Optional[QtGui.QWindow] = ...) -> None: ...
     def metric(self, metric: QtGui.QPaintDevice.PaintDeviceMetric) -> int: ...
     def resizeEvent(self, event: QtGui.QResizeEvent) -> None: ...
     def paintEvent(self, event: QtGui.QPaintEvent) -> None: ...
@@ -1466,63 +1118,22 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glLoadTransposeMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultTransposeMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultTransposeMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
-    def glColorTable(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        format: int,
-        type: int,
-        table: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glColorTable(self, target: int, internalformat: int, width: int, format: int, type: int, table: PYQT_OPENGL_ARRAY) -> None: ...
     def glColorTableParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glColorTableParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyColorTable(self, target: int, internalformat: int, x: int, y: int, width: int) -> None: ...
     def glGetColorTableParameterfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetColorTableParameteriv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
-    def glColorSubTable(
-        self,
-        target: int,
-        start: int,
-        count: int,
-        format: int,
-        type: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glColorSubTable(self, target: int, start: int, count: int, format: int, type: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyColorSubTable(self, target: int, start: int, x: int, y: int, width: int) -> None: ...
-    def glConvolutionFilter1D(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        format: int,
-        type: int,
-        image: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glConvolutionFilter2D(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        image: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glConvolutionFilter1D(self, target: int, internalformat: int, width: int, format: int, type: int, image: PYQT_OPENGL_ARRAY) -> None: ...
+    def glConvolutionFilter2D(self, target: int, internalformat: int, width: int, height: int, format: int, type: int, image: PYQT_OPENGL_ARRAY) -> None: ...
     def glConvolutionParameterf(self, target: int, pname: int, params: float) -> None: ...
     def glConvolutionParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glConvolutionParameteri(self, target: int, pname: int, params: int) -> None: ...
     def glConvolutionParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyConvolutionFilter1D(self, target: int, internalformat: int, x: int, y: int, width: int) -> None: ...
-    def glCopyConvolutionFilter2D(
-        self,
-        target: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
+    def glCopyConvolutionFilter2D(self, target: int, internalformat: int, x: int, y: int, width: int, height: int) -> None: ...
     def glGetConvolutionParameterfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetConvolutionParameteriv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
     def glHistogram(self, target: int, width: int, internalformat: int, sink: int) -> None: ...
@@ -1530,32 +1141,14 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glResetHistogram(self, target: int) -> None: ...
     def glResetMinmax(self, target: int) -> None: ...
     def glArrayElement(self, i: int) -> None: ...
-    def glColorPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glColorPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glDisableClientState(self, array: int) -> None: ...
     def glEdgeFlagPointer(self, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glEnableClientState(self, array: int) -> None: ...
     def glIndexPointer(self, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glNormalPointer(self, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
-    def glTexCoordPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
-    def glVertexPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glTexCoordPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
+    def glVertexPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glPopClientAttrib(self) -> None: ...
     def glPushClientAttrib(self, mask: int) -> None: ...
     def glNewList(self, list: int, mode: int) -> None: ...
@@ -1565,16 +1158,7 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glGenLists(self, range: int) -> int: ...
     def glListBase(self, base: int) -> None: ...
     def glBegin(self, mode: int) -> None: ...
-    def glBitmap(
-        self,
-        width: int,
-        height: int,
-        xorig: float,
-        yorig: float,
-        xmove: float,
-        ymove: float,
-        bitmap: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glBitmap(self, width: int, height: int, xorig: float, yorig: float, xmove: float, ymove: float, bitmap: PYQT_OPENGL_ARRAY) -> None: ...
     def glColor3b(self, red: int, green: int, blue: int) -> None: ...
     def glColor3bv(self, v: PYQT_OPENGL_ARRAY) -> None: ...
     def glColor3d(self, red: float, green: float, blue: float) -> None: ...
@@ -1755,50 +1339,10 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glAccum(self, op: int, value: float) -> None: ...
     def glPopAttrib(self) -> None: ...
     def glPushAttrib(self, mask: int) -> None: ...
-    def glMap1d(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        stride: int,
-        order: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap1f(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        stride: int,
-        order: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap2d(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        ustride: int,
-        uorder: int,
-        v1: float,
-        v2: float,
-        vstride: int,
-        vorder: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap2f(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        ustride: int,
-        uorder: int,
-        v1: float,
-        v2: float,
-        vstride: int,
-        vorder: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glMap1d(self, target: int, u1: float, u2: float, stride: int, order: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap1f(self, target: int, u1: float, u2: float, stride: int, order: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap2d(self, target: int, u1: float, u2: float, ustride: int, uorder: int, v1: float, v2: float, vstride: int, vorder: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap2f(self, target: int, u1: float, u2: float, ustride: int, uorder: int, v1: float, v2: float, vstride: int, vorder: int, points: PYQT_OPENGL_ARRAY) -> None: ...
     def glMapGrid1d(self, un: int, u1: float, u2: float) -> None: ...
     def glMapGrid1f(self, un: int, u1: float, u2: float) -> None: ...
     def glMapGrid2d(self, un: int, u1: float, u2: float, vn: int, v1: float, v2: float) -> None: ...
@@ -1823,22 +1367,11 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glPixelMapuiv(self, map: int, mapsize: int, values: PYQT_OPENGL_ARRAY) -> None: ...
     def glPixelMapusv(self, map: int, mapsize: int, values: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyPixels(self, x: int, y: int, width: int, height: int, type: int) -> None: ...
-    def glDrawPixels(
-        self,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glDrawPixels(self, width: int, height: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glGetClipPlane(self, plane: int) -> typing.Tuple[float, float, float, float]: ...
-    def glGetLightfv(
-        self, light: int, pname: int
-    ) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float],]: ...
+    def glGetLightfv(self, light: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float]]: ...
     def glGetLightiv(self, light: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int], typing.Tuple[int, int, int, int]]: ...
-    def glGetMaterialfv(
-        self, face: int, pname: int
-    ) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float],]: ...
+    def glGetMaterialfv(self, face: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float]]: ...
     def glGetMaterialiv(self, face: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int], typing.Tuple[int, int, int, int]]: ...
     def glGetTexEnvfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetTexEnviv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
@@ -1846,30 +1379,14 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glGetTexGenfv(self, coord: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetTexGeniv(self, coord: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
     def glIsList(self, list: int) -> int: ...
-    def glFrustum(
-        self,
-        left: float,
-        right: float,
-        bottom: float,
-        top: float,
-        zNear: float,
-        zFar: float,
-    ) -> None: ...
+    def glFrustum(self, left: float, right: float, bottom: float, top: float, zNear: float, zFar: float) -> None: ...
     def glLoadIdentity(self) -> None: ...
     def glLoadMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glLoadMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMatrixMode(self, mode: int) -> None: ...
     def glMultMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
-    def glOrtho(
-        self,
-        left: float,
-        right: float,
-        bottom: float,
-        top: float,
-        zNear: float,
-        zFar: float,
-    ) -> None: ...
+    def glOrtho(self, left: float, right: float, bottom: float, top: float, zNear: float, zFar: float) -> None: ...
     def glPopMatrix(self) -> None: ...
     def glPushMatrix(self) -> None: ...
     def glRotated(self, angle: float, x: float, y: float, z: float) -> None: ...
@@ -1926,37 +1443,11 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glUniform2iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform3iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform4iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
-    def glUniformMatrix2fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix3fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix4fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glUniformMatrix2fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix3fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix4fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glValidateProgram(self, program: int) -> None: ...
-    def glVertexAttribPointer(
-        self,
-        index: int,
-        size: int,
-        type: int,
-        normalized: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glVertexAttribPointer(self, index: int, size: int, type: int, normalized: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glGenQueries(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
     def glDeleteQueries(self, n: int, ids: PYQT_OPENGL_ARRAY) -> None: ...
     def glIsQuery(self, id: int) -> int: ...
@@ -1971,196 +1462,34 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glBufferSubData(self, target: int, offset: int, size: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glUnmapBuffer(self, target: int) -> int: ...
     def glGetBufferParameteriv(self, target: int, pname: int) -> int: ...
-    def glBlendFuncSeparate(
-        self,
-        sfactorRGB: int,
-        dfactorRGB: int,
-        sfactorAlpha: int,
-        dfactorAlpha: int,
-    ) -> None: ...
+    def glBlendFuncSeparate(self, sfactorRGB: int, dfactorRGB: int, sfactorAlpha: int, dfactorAlpha: int) -> None: ...
     def glPointParameterf(self, pname: int, param: float) -> None: ...
     def glPointParameterfv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glPointParameteri(self, pname: int, param: int) -> None: ...
     def glPointParameteriv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glActiveTexture(self, texture: int) -> None: ...
     def glSampleCoverage(self, value: float, invert: int) -> None: ...
-    def glCompressedTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCompressedTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glBlendColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
     def glBlendEquation(self, mode: int) -> None: ...
-    def glDrawRangeElements(
-        self,
-        mode: int,
-        start: int,
-        end: int,
-        count: int,
-        type: int,
-        indices: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCopyTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
+    def glDrawRangeElements(self, mode: int, start: int, end: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCopyTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, x: int, y: int, width: int, height: int) -> None: ...
     def glDrawArrays(self, mode: int, first: int, count: int) -> None: ...
     def glDrawElements(self, mode: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
     def glPolygonOffset(self, factor: float, units: float) -> None: ...
-    def glCopyTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        border: int,
-    ) -> None: ...
-    def glCopyTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-        border: int,
-    ) -> None: ...
+    def glCopyTexImage1D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, border: int) -> None: ...
+    def glCopyTexImage2D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, height: int, border: int) -> None: ...
     def glCopyTexSubImage1D(self, target: int, level: int, xoffset: int, x: int, y: int, width: int) -> None: ...
-    def glCopyTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
-    def glTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCopyTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, x: int, y: int, width: int, height: int) -> None: ...
+    def glTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glBindTexture(self, target: int, texture: int) -> None: ...
     def glDeleteTextures(self, n: int, textures: PYQT_OPENGL_ARRAY) -> None: ...
     def glGenTextures(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
@@ -2178,29 +1507,8 @@ class QOpenGLFunctions_2_0(QAbstractOpenGLFunctions):
     def glTexParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glTexParameteri(self, target: int, pname: int, param: int) -> None: ...
     def glTexParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
-    def glTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glDrawBuffer(self, mode: int) -> None: ...
     def glClear(self, mask: int) -> None: ...
     def glClearColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
@@ -2350,63 +1658,22 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glLoadTransposeMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultTransposeMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultTransposeMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
-    def glColorTable(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        format: int,
-        type: int,
-        table: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glColorTable(self, target: int, internalformat: int, width: int, format: int, type: int, table: PYQT_OPENGL_ARRAY) -> None: ...
     def glColorTableParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glColorTableParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyColorTable(self, target: int, internalformat: int, x: int, y: int, width: int) -> None: ...
     def glGetColorTableParameterfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetColorTableParameteriv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
-    def glColorSubTable(
-        self,
-        target: int,
-        start: int,
-        count: int,
-        format: int,
-        type: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glColorSubTable(self, target: int, start: int, count: int, format: int, type: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyColorSubTable(self, target: int, start: int, x: int, y: int, width: int) -> None: ...
-    def glConvolutionFilter1D(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        format: int,
-        type: int,
-        image: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glConvolutionFilter2D(
-        self,
-        target: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        image: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glConvolutionFilter1D(self, target: int, internalformat: int, width: int, format: int, type: int, image: PYQT_OPENGL_ARRAY) -> None: ...
+    def glConvolutionFilter2D(self, target: int, internalformat: int, width: int, height: int, format: int, type: int, image: PYQT_OPENGL_ARRAY) -> None: ...
     def glConvolutionParameterf(self, target: int, pname: int, params: float) -> None: ...
     def glConvolutionParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glConvolutionParameteri(self, target: int, pname: int, params: int) -> None: ...
     def glConvolutionParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyConvolutionFilter1D(self, target: int, internalformat: int, x: int, y: int, width: int) -> None: ...
-    def glCopyConvolutionFilter2D(
-        self,
-        target: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
+    def glCopyConvolutionFilter2D(self, target: int, internalformat: int, x: int, y: int, width: int, height: int) -> None: ...
     def glGetConvolutionParameterfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetConvolutionParameteriv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
     def glHistogram(self, target: int, width: int, internalformat: int, sink: int) -> None: ...
@@ -2414,32 +1681,14 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glResetHistogram(self, target: int) -> None: ...
     def glResetMinmax(self, target: int) -> None: ...
     def glArrayElement(self, i: int) -> None: ...
-    def glColorPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glColorPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glDisableClientState(self, array: int) -> None: ...
     def glEdgeFlagPointer(self, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glEnableClientState(self, array: int) -> None: ...
     def glIndexPointer(self, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glNormalPointer(self, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
-    def glTexCoordPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
-    def glVertexPointer(
-        self,
-        size: int,
-        type: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glTexCoordPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
+    def glVertexPointer(self, size: int, type: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glPopClientAttrib(self) -> None: ...
     def glPushClientAttrib(self, mask: int) -> None: ...
     def glNewList(self, list: int, mode: int) -> None: ...
@@ -2449,16 +1698,7 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glGenLists(self, range: int) -> int: ...
     def glListBase(self, base: int) -> None: ...
     def glBegin(self, mode: int) -> None: ...
-    def glBitmap(
-        self,
-        width: int,
-        height: int,
-        xorig: float,
-        yorig: float,
-        xmove: float,
-        ymove: float,
-        bitmap: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glBitmap(self, width: int, height: int, xorig: float, yorig: float, xmove: float, ymove: float, bitmap: PYQT_OPENGL_ARRAY) -> None: ...
     def glColor3b(self, red: int, green: int, blue: int) -> None: ...
     def glColor3bv(self, v: PYQT_OPENGL_ARRAY) -> None: ...
     def glColor3d(self, red: float, green: float, blue: float) -> None: ...
@@ -2639,50 +1879,10 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glAccum(self, op: int, value: float) -> None: ...
     def glPopAttrib(self) -> None: ...
     def glPushAttrib(self, mask: int) -> None: ...
-    def glMap1d(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        stride: int,
-        order: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap1f(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        stride: int,
-        order: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap2d(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        ustride: int,
-        uorder: int,
-        v1: float,
-        v2: float,
-        vstride: int,
-        vorder: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glMap2f(
-        self,
-        target: int,
-        u1: float,
-        u2: float,
-        ustride: int,
-        uorder: int,
-        v1: float,
-        v2: float,
-        vstride: int,
-        vorder: int,
-        points: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glMap1d(self, target: int, u1: float, u2: float, stride: int, order: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap1f(self, target: int, u1: float, u2: float, stride: int, order: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap2d(self, target: int, u1: float, u2: float, ustride: int, uorder: int, v1: float, v2: float, vstride: int, vorder: int, points: PYQT_OPENGL_ARRAY) -> None: ...
+    def glMap2f(self, target: int, u1: float, u2: float, ustride: int, uorder: int, v1: float, v2: float, vstride: int, vorder: int, points: PYQT_OPENGL_ARRAY) -> None: ...
     def glMapGrid1d(self, un: int, u1: float, u2: float) -> None: ...
     def glMapGrid1f(self, un: int, u1: float, u2: float) -> None: ...
     def glMapGrid2d(self, un: int, u1: float, u2: float, vn: int, v1: float, v2: float) -> None: ...
@@ -2707,22 +1907,11 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glPixelMapuiv(self, map: int, mapsize: int, values: PYQT_OPENGL_ARRAY) -> None: ...
     def glPixelMapusv(self, map: int, mapsize: int, values: PYQT_OPENGL_ARRAY) -> None: ...
     def glCopyPixels(self, x: int, y: int, width: int, height: int, type: int) -> None: ...
-    def glDrawPixels(
-        self,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glDrawPixels(self, width: int, height: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glGetClipPlane(self, plane: int) -> typing.Tuple[float, float, float, float]: ...
-    def glGetLightfv(
-        self, light: int, pname: int
-    ) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float],]: ...
+    def glGetLightfv(self, light: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float]]: ...
     def glGetLightiv(self, light: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int], typing.Tuple[int, int, int, int]]: ...
-    def glGetMaterialfv(
-        self, face: int, pname: int
-    ) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float],]: ...
+    def glGetMaterialfv(self, face: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float], typing.Tuple[float, float, float, float]]: ...
     def glGetMaterialiv(self, face: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int], typing.Tuple[int, int, int, int]]: ...
     def glGetTexEnvfv(self, target: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetTexEnviv(self, target: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
@@ -2730,30 +1919,14 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glGetTexGenfv(self, coord: int, pname: int) -> typing.Union[float, typing.Tuple[float, float, float, float]]: ...
     def glGetTexGeniv(self, coord: int, pname: int) -> typing.Union[int, typing.Tuple[int, int, int, int]]: ...
     def glIsList(self, list: int) -> int: ...
-    def glFrustum(
-        self,
-        left: float,
-        right: float,
-        bottom: float,
-        top: float,
-        zNear: float,
-        zFar: float,
-    ) -> None: ...
+    def glFrustum(self, left: float, right: float, bottom: float, top: float, zNear: float, zFar: float) -> None: ...
     def glLoadIdentity(self) -> None: ...
     def glLoadMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glLoadMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMatrixMode(self, mode: int) -> None: ...
     def glMultMatrixf(self, m: PYQT_OPENGL_ARRAY) -> None: ...
     def glMultMatrixd(self, m: PYQT_OPENGL_ARRAY) -> None: ...
-    def glOrtho(
-        self,
-        left: float,
-        right: float,
-        bottom: float,
-        top: float,
-        zNear: float,
-        zFar: float,
-    ) -> None: ...
+    def glOrtho(self, left: float, right: float, bottom: float, top: float, zNear: float, zFar: float) -> None: ...
     def glPopMatrix(self) -> None: ...
     def glPushMatrix(self) -> None: ...
     def glRotated(self, angle: float, x: float, y: float, z: float) -> None: ...
@@ -2810,37 +1983,11 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glUniform2iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform3iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform4iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
-    def glUniformMatrix2fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix3fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix4fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glUniformMatrix2fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix3fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix4fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glValidateProgram(self, program: int) -> None: ...
-    def glVertexAttribPointer(
-        self,
-        index: int,
-        size: int,
-        type: int,
-        normalized: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glVertexAttribPointer(self, index: int, size: int, type: int, normalized: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glGenQueries(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
     def glDeleteQueries(self, n: int, ids: PYQT_OPENGL_ARRAY) -> None: ...
     def glIsQuery(self, id: int) -> int: ...
@@ -2855,196 +2002,34 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glBufferSubData(self, target: int, offset: int, size: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glUnmapBuffer(self, target: int) -> int: ...
     def glGetBufferParameteriv(self, target: int, pname: int) -> int: ...
-    def glBlendFuncSeparate(
-        self,
-        sfactorRGB: int,
-        dfactorRGB: int,
-        sfactorAlpha: int,
-        dfactorAlpha: int,
-    ) -> None: ...
+    def glBlendFuncSeparate(self, sfactorRGB: int, dfactorRGB: int, sfactorAlpha: int, dfactorAlpha: int) -> None: ...
     def glPointParameterf(self, pname: int, param: float) -> None: ...
     def glPointParameterfv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glPointParameteri(self, pname: int, param: int) -> None: ...
     def glPointParameteriv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glActiveTexture(self, texture: int) -> None: ...
     def glSampleCoverage(self, value: float, invert: int) -> None: ...
-    def glCompressedTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCompressedTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glBlendColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
     def glBlendEquation(self, mode: int) -> None: ...
-    def glDrawRangeElements(
-        self,
-        mode: int,
-        start: int,
-        end: int,
-        count: int,
-        type: int,
-        indices: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCopyTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
+    def glDrawRangeElements(self, mode: int, start: int, end: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCopyTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, x: int, y: int, width: int, height: int) -> None: ...
     def glDrawArrays(self, mode: int, first: int, count: int) -> None: ...
     def glDrawElements(self, mode: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
     def glPolygonOffset(self, factor: float, units: float) -> None: ...
-    def glCopyTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        border: int,
-    ) -> None: ...
-    def glCopyTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-        border: int,
-    ) -> None: ...
+    def glCopyTexImage1D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, border: int) -> None: ...
+    def glCopyTexImage2D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, height: int, border: int) -> None: ...
     def glCopyTexSubImage1D(self, target: int, level: int, xoffset: int, x: int, y: int, width: int) -> None: ...
-    def glCopyTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
-    def glTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCopyTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, x: int, y: int, width: int, height: int) -> None: ...
+    def glTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glBindTexture(self, target: int, texture: int) -> None: ...
     def glDeleteTextures(self, n: int, textures: PYQT_OPENGL_ARRAY) -> None: ...
     def glGenTextures(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
@@ -3062,29 +2047,8 @@ class QOpenGLFunctions_2_1(QAbstractOpenGLFunctions):
     def glTexParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glTexParameteri(self, target: int, pname: int, param: int) -> None: ...
     def glTexParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
-    def glTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glDrawBuffer(self, mode: int) -> None: ...
     def glClear(self, mask: int) -> None: ...
     def glClearColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
@@ -3144,24 +2108,8 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glProgramUniform3d(self, program: int, location: int, v0: float, v1: float, v2: float) -> None: ...
     def glProgramUniform3ui(self, program: int, location: int, v0: int, v1: int, v2: int) -> None: ...
     def glProgramUniform4i(self, program: int, location: int, v0: int, v1: int, v2: int, v3: int) -> None: ...
-    def glProgramUniform4f(
-        self,
-        program: int,
-        location: int,
-        v0: float,
-        v1: float,
-        v2: float,
-        v3: float,
-    ) -> None: ...
-    def glProgramUniform4d(
-        self,
-        program: int,
-        location: int,
-        v0: float,
-        v1: float,
-        v2: float,
-        v3: float,
-    ) -> None: ...
+    def glProgramUniform4f(self, program: int, location: int, v0: float, v1: float, v2: float, v3: float) -> None: ...
+    def glProgramUniform4d(self, program: int, location: int, v0: float, v1: float, v2: float, v3: float) -> None: ...
     def glProgramUniform4ui(self, program: int, location: int, v0: int, v1: int, v2: int, v3: int) -> None: ...
     def glValidateProgramPipeline(self, pipeline: int) -> None: ...
     def glVertexAttribL1d(self, index: int, x: float) -> None: ...
@@ -3201,25 +2149,8 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glVertexAttribP4ui(self, index: int, type: int, normalized: int, value: int) -> None: ...
     def glFramebufferTexture(self, target: int, attachment: int, texture: int, level: int) -> None: ...
     def glProvokingVertex(self, mode: int) -> None: ...
-    def glTexImage2DMultisample(
-        self,
-        target: int,
-        samples: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        fixedsamplelocations: int,
-    ) -> None: ...
-    def glTexImage3DMultisample(
-        self,
-        target: int,
-        samples: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        fixedsamplelocations: int,
-    ) -> None: ...
+    def glTexImage2DMultisample(self, target: int, samples: int, internalformat: int, width: int, height: int, fixedsamplelocations: int) -> None: ...
+    def glTexImage3DMultisample(self, target: int, samples: int, internalformat: int, width: int, height: int, depth: int, fixedsamplelocations: int) -> None: ...
     def glSampleMaski(self, index: int, mask: int) -> None: ...
     def glDrawArraysInstanced(self, mode: int, first: int, count: int, instancecount: int) -> None: ...
     def glTexBuffer(self, target: int, internalformat: int, buffer: int) -> None: ...
@@ -3246,68 +2177,14 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glIsFramebuffer(self, framebuffer: int) -> int: ...
     def glBindFramebuffer(self, target: int, framebuffer: int) -> None: ...
     def glCheckFramebufferStatus(self, target: int) -> int: ...
-    def glFramebufferTexture1D(
-        self,
-        target: int,
-        attachment: int,
-        textarget: int,
-        texture: int,
-        level: int,
-    ) -> None: ...
-    def glFramebufferTexture2D(
-        self,
-        target: int,
-        attachment: int,
-        textarget: int,
-        texture: int,
-        level: int,
-    ) -> None: ...
-    def glFramebufferTexture3D(
-        self,
-        target: int,
-        attachment: int,
-        textarget: int,
-        texture: int,
-        level: int,
-        zoffset: int,
-    ) -> None: ...
-    def glFramebufferRenderbuffer(
-        self,
-        target: int,
-        attachment: int,
-        renderbuffertarget: int,
-        renderbuffer: int,
-    ) -> None: ...
+    def glFramebufferTexture1D(self, target: int, attachment: int, textarget: int, texture: int, level: int) -> None: ...
+    def glFramebufferTexture2D(self, target: int, attachment: int, textarget: int, texture: int, level: int) -> None: ...
+    def glFramebufferTexture3D(self, target: int, attachment: int, textarget: int, texture: int, level: int, zoffset: int) -> None: ...
+    def glFramebufferRenderbuffer(self, target: int, attachment: int, renderbuffertarget: int, renderbuffer: int) -> None: ...
     def glGenerateMipmap(self, target: int) -> None: ...
-    def glBlitFramebuffer(
-        self,
-        srcX0: int,
-        srcY0: int,
-        srcX1: int,
-        srcY1: int,
-        dstX0: int,
-        dstY0: int,
-        dstX1: int,
-        dstY1: int,
-        mask: int,
-        filter: int,
-    ) -> None: ...
-    def glRenderbufferStorageMultisample(
-        self,
-        target: int,
-        samples: int,
-        internalformat: int,
-        width: int,
-        height: int,
-    ) -> None: ...
-    def glFramebufferTextureLayer(
-        self,
-        target: int,
-        attachment: int,
-        texture: int,
-        level: int,
-        layer: int,
-    ) -> None: ...
+    def glBlitFramebuffer(self, srcX0: int, srcY0: int, srcX1: int, srcY1: int, dstX0: int, dstY0: int, dstX1: int, dstY1: int, mask: int, filter: int) -> None: ...
+    def glRenderbufferStorageMultisample(self, target: int, samples: int, internalformat: int, width: int, height: int) -> None: ...
+    def glFramebufferTextureLayer(self, target: int, attachment: int, texture: int, level: int, layer: int) -> None: ...
     def glBindVertexArray(self, array: int) -> None: ...
     def glIsVertexArray(self, array: int) -> int: ...
     def glBlendEquationSeparate(self, modeRGB: int, modeAlpha: int) -> None: ...
@@ -3358,37 +2235,11 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glUniform2iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform3iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glUniform4iv(self, location: int, count: int, value: PYQT_OPENGL_ARRAY) -> None: ...
-    def glUniformMatrix2fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix3fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glUniformMatrix4fv(
-        self,
-        location: int,
-        count: int,
-        transpose: int,
-        value: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glUniformMatrix2fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix3fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
+    def glUniformMatrix4fv(self, location: int, count: int, transpose: int, value: PYQT_OPENGL_ARRAY) -> None: ...
     def glValidateProgram(self, program: int) -> None: ...
-    def glVertexAttribPointer(
-        self,
-        index: int,
-        size: int,
-        type: int,
-        normalized: int,
-        stride: int,
-        pointer: PYQT_OPENGL_BOUND_ARRAY,
-    ) -> None: ...
+    def glVertexAttribPointer(self, index: int, size: int, type: int, normalized: int, stride: int, pointer: PYQT_OPENGL_BOUND_ARRAY) -> None: ...
     def glGenQueries(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
     def glDeleteQueries(self, n: int, ids: PYQT_OPENGL_ARRAY) -> None: ...
     def glIsQuery(self, id: int) -> int: ...
@@ -3403,196 +2254,34 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glBufferSubData(self, target: int, offset: int, size: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glUnmapBuffer(self, target: int) -> int: ...
     def glGetBufferParameteriv(self, target: int, pname: int) -> int: ...
-    def glBlendFuncSeparate(
-        self,
-        sfactorRGB: int,
-        dfactorRGB: int,
-        sfactorAlpha: int,
-        dfactorAlpha: int,
-    ) -> None: ...
+    def glBlendFuncSeparate(self, sfactorRGB: int, dfactorRGB: int, sfactorAlpha: int, dfactorAlpha: int) -> None: ...
     def glPointParameterf(self, pname: int, param: float) -> None: ...
     def glPointParameterfv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glPointParameteri(self, pname: int, param: int) -> None: ...
     def glPointParameteriv(self, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glActiveTexture(self, texture: int) -> None: ...
     def glSampleCoverage(self, value: float, invert: int) -> None: ...
-    def glCompressedTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCompressedTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        imageSize: int,
-        data: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCompressedTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCompressedTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, imageSize: int, data: PYQT_OPENGL_ARRAY) -> None: ...
     def glBlendColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
     def glBlendEquation(self, mode: int) -> None: ...
-    def glDrawRangeElements(
-        self,
-        mode: int,
-        start: int,
-        end: int,
-        count: int,
-        type: int,
-        indices: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage3D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        depth: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        width: int,
-        height: int,
-        depth: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glCopyTexSubImage3D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        zoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
+    def glDrawRangeElements(self, mode: int, start: int, end: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage3D(self, target: int, level: int, internalformat: int, width: int, height: int, depth: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, width: int, height: int, depth: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glCopyTexSubImage3D(self, target: int, level: int, xoffset: int, yoffset: int, zoffset: int, x: int, y: int, width: int, height: int) -> None: ...
     def glDrawArrays(self, mode: int, first: int, count: int) -> None: ...
     def glDrawElements(self, mode: int, count: int, type: int, indices: PYQT_OPENGL_ARRAY) -> None: ...
     def glPolygonOffset(self, factor: float, units: float) -> None: ...
-    def glCopyTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        border: int,
-    ) -> None: ...
-    def glCopyTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-        border: int,
-    ) -> None: ...
+    def glCopyTexImage1D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, border: int) -> None: ...
+    def glCopyTexImage2D(self, target: int, level: int, internalformat: int, x: int, y: int, width: int, height: int, border: int) -> None: ...
     def glCopyTexSubImage1D(self, target: int, level: int, xoffset: int, x: int, y: int, width: int) -> None: ...
-    def glCopyTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        x: int,
-        y: int,
-        width: int,
-        height: int,
-    ) -> None: ...
-    def glTexSubImage1D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        width: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexSubImage2D(
-        self,
-        target: int,
-        level: int,
-        xoffset: int,
-        yoffset: int,
-        width: int,
-        height: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glCopyTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, x: int, y: int, width: int, height: int) -> None: ...
+    def glTexSubImage1D(self, target: int, level: int, xoffset: int, width: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexSubImage2D(self, target: int, level: int, xoffset: int, yoffset: int, width: int, height: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glBindTexture(self, target: int, texture: int) -> None: ...
     def glDeleteTextures(self, n: int, textures: PYQT_OPENGL_ARRAY) -> None: ...
     def glGenTextures(self, n: int) -> typing.Union[int, typing.Tuple[int, ...]]: ...
@@ -3608,29 +2297,8 @@ class QOpenGLFunctions_4_1_Core(QAbstractOpenGLFunctions):
     def glTexParameterfv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
     def glTexParameteri(self, target: int, pname: int, param: int) -> None: ...
     def glTexParameteriv(self, target: int, pname: int, params: PYQT_OPENGL_ARRAY) -> None: ...
-    def glTexImage1D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
-    def glTexImage2D(
-        self,
-        target: int,
-        level: int,
-        internalformat: int,
-        width: int,
-        height: int,
-        border: int,
-        format: int,
-        type: int,
-        pixels: PYQT_OPENGL_ARRAY,
-    ) -> None: ...
+    def glTexImage1D(self, target: int, level: int, internalformat: int, width: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
+    def glTexImage2D(self, target: int, level: int, internalformat: int, width: int, height: int, border: int, format: int, type: int, pixels: PYQT_OPENGL_ARRAY) -> None: ...
     def glDrawBuffer(self, mode: int) -> None: ...
     def glClear(self, mask: int) -> None: ...
     def glClearColor(self, red: float, green: float, blue: float, alpha: float) -> None: ...
