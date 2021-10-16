@@ -1,5 +1,7 @@
 """Fixer that visits classes and methods to fix unmatched signatures."""
-from typing import List, Union
+from __future__ import annotations
+
+from typing import List
 
 from libcst import BaseStatement, CSTTransformer, FlattenSentinel, FunctionDef, RemovalSentinel
 from libcst.metadata import PositionProvider
@@ -16,7 +18,7 @@ class SigMatchFixer(CSTTransformer):
         self._module_name = mod_name
         self._remove_lines = remove_lines
 
-    def leave_FunctionDef(self, original_node: FunctionDef, _: FunctionDef) -> Union[BaseStatement, FlattenSentinel[BaseStatement], RemovalSentinel]:
+    def leave_FunctionDef(self, original_node: FunctionDef, _: FunctionDef) -> BaseStatement | FlattenSentinel[BaseStatement] | RemovalSentinel:
         """Leave the method and change signature if a signal."""
         pos = self.get_metadata(PositionProvider, original_node).start.line
         end_pos = self.get_metadata(PositionProvider, original_node).end.line

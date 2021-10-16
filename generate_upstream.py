@@ -11,6 +11,7 @@ from typing import Dict, List
 from libcst import MetadataWrapper, parse_module
 from mypy import api
 
+from fixes.custom_fixer import CustomFixer
 from fixes.sig_match_fixer import SigMatchFixer
 from fixes.signal_fixer import SignalFixer
 
@@ -104,6 +105,8 @@ for file in os.listdir("PyQt6-stubs"):
     modified_tree = stub_tree.visit(sig_match_fixer)
     signal_fixer = SignalFixer(mod_name)
     modified_tree = modified_tree.visit(signal_fixer)
+    custom_fixer = CustomFixer(mod_name)
+    modified_tree = modified_tree.visit(custom_fixer)
 
     with open(path, "w", encoding="utf-8") as fhandle:
         fhandle.write(modified_tree.code)
