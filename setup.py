@@ -2,7 +2,7 @@
 from setuptools import setup  # type: ignore
 
 setup(
-    name="PyQt5-stubs",
+    name="PyQt6-stubs",
     url="https://github.com/TilmanK/PyQt6-stubs",
     author="Tilman Krummeck",
     maintainer_email="tilman@krummeck.de",
