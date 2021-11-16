@@ -14,10 +14,11 @@ from mypy import api
 from fixes.custom_fixer import CustomFixer
 from fixes.sig_match_fixer import SigMatchFixer
 from fixes.signal_fixer import SignalFixer
+from PyQt6_stubs import PYQT_VERSION
 
-# Create PyQt6-stubs folder if necessary
+# Create PyQt6_stubs folder if necessary
 try:
-    os.makedirs("PyQt6-stubs")
+    os.makedirs("PyQt6_stubs")
 except FileExistsError:
     pass
 
@@ -34,7 +35,7 @@ with tempfile.TemporaryDirectory() as temp_dwld_folder:
             "download",
             "-d",
             temp_dwld_folder,
-            "PyQt6==6.0.2",
+            f"PyQt6=={PYQT_VERSION}",
         ]
     )
 
@@ -47,21 +48,25 @@ with tempfile.TemporaryDirectory() as temp_dwld_folder:
             with zipfile.ZipFile(os.path.join(temp_dwld_folder, file), "r") as zip_ref:
                 zip_ref.extractall(temp_folder)
 
-        # Take every pyi file and move it to "PyQt6-stubs"
+        # Take every pyi file and move it to "PyQt6_stubs"
         for folder in os.listdir(temp_folder):
             for file in os.listdir(os.path.join(temp_folder, folder)):
                 if file.endswith(".pyi"):
                     shutil.copyfile(
                         os.path.join(temp_folder, folder, file),
-                        os.path.join("PyQt6-stubs", file),
+                        os.path.join("PyQt6_stubs", file),
                     )
-                    subprocess.check_call(["git", "add", os.path.join("PyQt6-stubs", file)])
+                    subprocess.check_call(["git", "add", os.path.join("PyQt6_stubs", file)])
 
 # Apply the quick fixes from mypy:
 remove_annotations: Dict[str, List[int]] = defaultdict(list)
 
-for file in os.listdir("PyQt6-stubs"):
-    file_to_fix = os.path.join("PyQt6-stubs", file)
+for file in os.listdir("PyQt6_stubs"):
+    if file.startswith("__"):
+        print(f"Ignoring file {file}")
+        continue
+
+    file_to_fix = os.path.join("PyQt6_stubs", file)
 
     result = api.run([file_to_fix])[0]
     if result.startswith("Success"):
@@ -94,16 +99,24 @@ for file in os.listdir("PyQt6-stubs"):
         fhandle.writelines(lines)
 
 # Now apply the fixes:
-for file in os.listdir("PyQt6-stubs"):
+for file in os.listdir("PyQt6_stubs"):
+    if file.startswith("__"):
+        print(f"Ignoring file {file}")
+        continue
+
     print("Fixing signals in " + file)
-    path = os.path.join("PyQt6-stubs", file)
+    path = os.path.join("PyQt6_stubs", file)
     with open(path, "r", encoding="utf-8") as fhandle:
         stub_tree = MetadataWrapper(parse_module(fhandle.read()))
 
     mod_name = file.replace(".pyi", "")
     sig_match_fixer = SigMatchFixer(mod_name, remove_annotations[mod_name])
     modified_tree = stub_tree.visit(sig_match_fixer)
-    signal_fixer = SignalFixer(mod_name)
+    try:
+        signal_fixer = SignalFixer(mod_name)
+    except ModuleNotFoundError:
+        print(f"Could not import module {mod_name}")
+        continue
     modified_tree = modified_tree.visit(signal_fixer)
     custom_fixer = CustomFixer(mod_name)
     modified_tree = modified_tree.visit(custom_fixer)
@@ -112,5 +125,5 @@ for file in os.listdir("PyQt6-stubs"):
         fhandle.write(modified_tree.code)
 
 # Lint the files with iSort and Black
-subprocess.check_call(["isort", "--profile", "black", "-l 10000", "PyQt6-stubs"])
-subprocess.check_call(["black", "--safe", "--quiet", "-l 10000", "PyQt6-stubs"])
+subprocess.check_call(["isort", "--profile", "black", "-l 10000", "PyQt6_stubs"])
+subprocess.check_call(["black", "--safe", "--quiet", "-l 10000", "PyQt6_stubs"])
