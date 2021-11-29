@@ -1,3 +1,3 @@
 """Version numbers."""
-PYQT_VERSION = (6, 0, 2)
+PYQT_VERSION = (6, 2, 1)
 STUB_VERSION = 1

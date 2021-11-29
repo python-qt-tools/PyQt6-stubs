@@ -7,6 +7,7 @@ import sys
 import tempfile
 import zipfile
 from collections import defaultdict
+from pathlib import Path
 from typing import Dict, List
 
 from libcst import MetadataWrapper, parse_module
@@ -98,7 +99,7 @@ def prepare_files() -> Dict[str, List[int]]:
             elif " is incompatible with supertype " in error_msg or " incompatible with return type " in error_msg:
                 lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
             elif " will never be matched: signature " in error_msg:
-                remove_annotations[stub_file.replace(".pyi", "")].append(line_nbr)
+                annotations[stub_file.replace(".pyi", "")].append(line_nbr)
 
         # Replace bad class names (i.e. Qt.ItemFlags with Qt.ItemFlag)
         for idx, line in enumerate(lines):
@@ -108,6 +109,23 @@ def prepare_files() -> Dict[str, List[int]]:
             w_handle.writelines(lines)
 
     return annotations
+
+
+def fix_qt_bluetooth():
+    "Fix QtBluetooth.pyi which has an invalid syntax."
+
+    with open(Path("PyQt6-stubs").joinpath("QtBluetooth.pyi"), "r", encoding="utf-8") as b_handle:
+        lines = b_handle.readlines()
+
+        with open(Path("PyQt6-stubs").joinpath("QtBluetooth.pyi"), "w", encoding="utf-8") as b_handle:
+            for line in lines:
+                if "class DiscoveryMethod(enum.Flag):" in line:
+                    b_handle.write("    class DiscoveryMethod(enum.Flag):\n")
+                    b_handle.write("        NoMethod = ... # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod\n")
+                    b_handle.write("        ClassicMethod = ... # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod\n")
+                    b_handle.write("        LowEnergyMethod = ... # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod\n")
+                else:
+                    b_handle.write(line)
 
 
 if __name__ == "__main__":
@@ -124,6 +142,8 @@ if __name__ == "__main__":
     # Download required packages
     with tempfile.TemporaryDirectory() as temp_dwld_folder:
         download_stubs()
+
+    fix_qt_bluetooth()
 
     remove_annotations = prepare_files()
 
