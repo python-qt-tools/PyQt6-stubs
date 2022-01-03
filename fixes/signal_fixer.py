@@ -53,7 +53,7 @@ class SignalFixer(cst.CSTTransformer):
             full_name = f"{self._last_class[-1].name.value}.{f_name}"
             if full_name in self._fixed_signals:
                 # Handle the use-case of overloaded signals, that are defined
-                # multiple time because of their different signal arguments
+                # multiple times because of their different signal arguments
                 # i.e.: QComboBox.highlighted
                 return cst.RemovalSentinel.REMOVE
             self._fixed_signals.append(full_name)

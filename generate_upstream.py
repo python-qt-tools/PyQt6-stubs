@@ -1,6 +1,5 @@
 """Generate the upstream stubs."""
 import os
-import re
 import shutil
 import subprocess
 import sys
@@ -17,15 +16,6 @@ from fixes.custom_fixer import CustomFixer
 from fixes.sig_match_fixer import SigMatchFixer
 from fixes.signal_fixer import SignalFixer
 from version import PYQT_VERSION
-
-REPLACEMENTS = {
-    "ItemFlags": "ItemFlag",
-    "Orientations": "Orientation",
-    "StandardButtons": "StandardButton",
-    "DockWidgetAreas": "DockWidgetArea",
-}
-RE_REPLACEMENTS = dict((re.escape(k), v) for k, v in REPLACEMENTS.items())
-PATTERN = re.compile("|".join(RE_REPLACEMENTS.keys()))
 
 
 def download_stubs() -> None:
@@ -100,10 +90,6 @@ def prepare_files() -> Dict[str, List[int]]:
                 lines[line_nbr - 1] = lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
             elif " will never be matched: signature " in error_msg:
                 annotations[stub_file.replace(".pyi", "")].append(line_nbr)
-
-        # Replace bad class names (i.e. Qt.ItemFlags with Qt.ItemFlag)
-        for idx, line in enumerate(lines):
-            lines[idx] = PATTERN.sub(lambda m: RE_REPLACEMENTS[re.escape(m.group(0))], line)
 
         with open(file_to_fix, "w", encoding="utf-8") as w_handle:
             w_handle.writelines(lines)

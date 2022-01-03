@@ -320,7 +320,7 @@ class Qt(PyQt6.sip.simplewrapper):
         MatchRecursive = ...  # type: Qt.MatchFlag
         MatchRegularExpression = ...  # type: Qt.MatchFlag
     class ItemFlag(enum.Flag):
-        NoItemFlag = ...  # type: Qt.ItemFlag
+        NoItemFlags = ...  # type: Qt.ItemFlag
         ItemIsSelectable = ...  # type: Qt.ItemFlag
         ItemIsEditable = ...  # type: Qt.ItemFlag
         ItemIsDragEnabled = ...  # type: Qt.ItemFlag
@@ -473,7 +473,7 @@ class Qt(PyQt6.sip.simplewrapper):
         RightDockWidgetArea = ...  # type: Qt.DockWidgetArea
         TopDockWidgetArea = ...  # type: Qt.DockWidgetArea
         BottomDockWidgetArea = ...  # type: Qt.DockWidgetArea
-        AllDockWidgetArea = ...  # type: Qt.DockWidgetArea
+        AllDockWidgetAreas = ...  # type: Qt.DockWidgetArea
         NoDockWidgetArea = ...  # type: Qt.DockWidgetArea
     class AspectRatioMode(enum.Enum):
         IgnoreAspectRatio = ...  # type: Qt.AspectRatioMode
