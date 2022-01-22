@@ -13,6 +13,7 @@ from typing import Set, Tuple
 from libcst import MetadataWrapper, parse_module
 from mypy import api as mypy_api
 
+from fixes.annotation_fixer import AnnotationFixer
 from fixes.custom_fixer import CustomFixer
 from fixes.signal_fixer import SignalFixer
 from version import PYQT_VERSION
@@ -192,6 +193,8 @@ if __name__ == "__main__":
             print(f"Could not import module {file.stem}")
             continue
         modified_tree = stub_tree.visit(signal_fixer)
+        annotation_fixer = AnnotationFixer(file.stem)
+        modified_tree = modified_tree.visit(annotation_fixer)
         custom_fixer = CustomFixer(file.stem)
         modified_tree = modified_tree.visit(custom_fixer)
 
@@ -199,9 +202,11 @@ if __name__ == "__main__":
             fhandle.write(modified_tree.code)
 
     # Lint the files with iSort and Black
+    print("Fixing files with iSort")
     subprocess.check_call(
         ["isort", "--profile", "black", "-l 10000", str(SRC_DIR)]
     )
+    print("Fixing files with Black")
     subprocess.check_call(
         ["black", "--safe", "--quiet", "-l 10000", str(SRC_DIR)]
     )
