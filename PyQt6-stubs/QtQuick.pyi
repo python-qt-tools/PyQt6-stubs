@@ -73,6 +73,8 @@ class QQuickItem(QtCore.QObject, QtQml.QQmlParserStatus):
         @typing.overload
         def __init__(self, v: float) -> None: ...
         @typing.overload
+        def __init__(self, v: bool) -> None: ...  # type: ignore[misc]
+        @typing.overload
         def __init__(self, a0: "QQuickItem.ItemChangeData") -> None: ...
     class UpdatePaintNodeData(PyQt6.sip.simplewrapper):
 

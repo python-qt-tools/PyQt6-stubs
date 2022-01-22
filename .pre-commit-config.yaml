@@ -12,6 +12,15 @@ repos:
       - id: black
         args: [ --safe, --quiet, -l 10000 ]
         language_version: python3
+        files: ^PyQt6-stubs/
+
+  - repo: https://github.com/psf/black
+    rev: 21.9b0
+    hooks:
+      - id: black
+        args: [ --safe, --quiet, -l 79 ]
+        language_version: python3
+        exclude: ^PyQt6-stubs/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1

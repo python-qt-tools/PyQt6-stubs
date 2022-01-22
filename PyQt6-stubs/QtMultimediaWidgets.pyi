@@ -25,7 +25,7 @@ import enum
 import typing
 
 import PyQt6.sip
-from PyQt6 import QtCore, QtMultimedia, QtWidgets
+from PyQt6 import QtCore, QtGui, QtMultimedia, QtWidgets
 
 # Convenient type aliases.
 PYQT_SIGNAL = typing.Union[QtCore.pyqtSignal, QtCore.pyqtBoundSignal]
