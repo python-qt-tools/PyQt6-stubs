@@ -1,10 +1,12 @@
 """AnnotationFixer that will fix annotations on class methods."""
 from __future__ import annotations
 
-from typing import List
+from typing import List, Union
 
 from libcst import (
     Annotation,
+    Assign,
+    BaseSmallStatement,
     BaseStatement,
     ClassDef,
     CSTTransformer,
@@ -12,7 +14,9 @@ from libcst import (
     FunctionDef,
     Module,
     RemovalSentinel,
+    SimpleStatementLine,
     parse_expression,
+    parse_statement,
 )
 
 from fixes.annotation_fixes import ANNOTATION_FIXES, AnnotationFix
@@ -33,6 +37,12 @@ class AnnotationFixer(CSTTransformer):
             fix for fix in ANNOTATION_FIXES if fix.module_name == mod_name
         ]
 
+        # Custom type definitons to be inserted after PYQT_SLOT/PYQT_SIGNAL
+        self._type_defs = set(
+            fix.custom_type for fix in self._fixes if fix.custom_type
+        )
+        self._insert_type_defs = False
+
     @property
     def class_name(self) -> str | None:
         """Return the name of the current class."""
@@ -48,6 +58,29 @@ class AnnotationFixer(CSTTransformer):
             return self._last_function[-1].name.value
         except IndexError:
             return None
+
+    def leave_Assign(
+        self, original_node: Assign, updated_node: Assign
+    ) -> Union[
+        BaseSmallStatement,
+        FlattenSentinel[BaseSmallStatement],
+        RemovalSentinel,
+    ]:
+        name = original_node.targets[0].target.value  # type: ignore
+        if name == "PYQT_SLOT":
+            self._insert_type_defs = True
+        return original_node
+
+    def leave_SimpleStatementLine(
+        self,
+        original_node: SimpleStatementLine,
+        updated_node: SimpleStatementLine,
+    ) -> BaseStatement | FlattenSentinel[BaseStatement] | RemovalSentinel:
+        if self._insert_type_defs and self._type_defs:
+            type_defs = list(map(parse_statement, self._type_defs))
+            self._insert_type_defs = False
+            return FlattenSentinel([updated_node, *type_defs])
+        return updated_node
 
     def visit_ClassDef(self, node: ClassDef) -> bool:
         """Put a class on top of the stack when visiting."""

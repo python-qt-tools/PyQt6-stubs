@@ -1,7 +1,7 @@
-"""Definition of all annnotation fixes."""
+"""Definition of all annotation fixes."""
 
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -11,7 +11,7 @@ class Param:
     name: str  # name of the parameter
     annotation: str  # desired annotation as str
     # todo: Use to check if something expected has changed
-    current_annotation: str | None  # current annotation as str
+    current_annotation: Optional[str]  # current annotation as str
     # todo: return values!
 
 
@@ -23,6 +23,9 @@ class AnnotationFix:
     class_name: str  # name of the class the method belongs to
     method_name: str  # name of the method
     params: List[Param]  # List of the method's parameters
+    custom_type: Optional[
+        str
+    ] = None  # Defines a custom type that will be added once to the module
 
 
 # Fix definitions
@@ -38,5 +41,50 @@ ANNOTATION_FIXES = [
         "voidptr",
         "setwriteable",
         [Param("bool", "bool", None)],
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChildren",
+        [
+            Param(
+                "types",
+                "typing.Tuple[typing.Type[QObjectT], ...]",
+                "typing.Tuple",
+            ),
+            Param("name", "str", "str"),
+            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+        ],
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChildren",
+        [
+            Param(
+                "types",
+                "typing.Tuple[typing.Type[QObjectT], ...]",
+                "typing.Tuple",
+            ),
+            Param("re", '"QRegularExpression"', '"QRegularExpression"'),
+            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+        ],
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChild",
+        [
+            Param(
+                "types",
+                "typing.Tuple[typing.Type[QObjectT], ...]",
+                "typing.Tuple",
+            ),
+            Param("name", '"str"', '"str"'),
+            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+        ],
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
 ]
