@@ -67,40 +67,30 @@ class AnnotationFixer(CSTTransformer):
             # We need a class to operate, currently.
             self._last_function.pop()
             return updated_node
+
+        # Check if we can fix the function.
         fix = self._get_fix()
         if fix:
+            # Check every parameter and find the appropriate one to fix in the
+            # source code.
             for param in fix.params:
-                for idx, original_param in enumerate(
-                    updated_node.params.params
-                ):
+                for original_param in updated_node.params.params:
                     if original_param.name.value == "self":
+                        # Can we fix self? ;)
                         continue
+                    # Fix the parameter
                     if original_param.name.value == param.name:
                         print(
                             f"Changing annotation of "
                             f"{self.function_name}:{original_param.name.value}"
                             f" to {param.annotation}"
                         )
-                        # if param.annotation not in ("bool", "str", "int", "float", "None"):
-                        #     stmt = parse_statement(param.annotation)
-                        #     # use the idx to access the params if changing more
-                        #     # than one parameter
-                        #     par_ref = updated_node.params.params[idx]
-                        #     updated_node = updated_node.with_deep_changes(
-                        #         par_ref, annotation=stmt
-                        #     )
-                        # else:
-                        anno_ref = updated_node.params.params[idx]
                         expr = parse_expression(param.annotation)
-                        # if anno_ref.annotation:
-                        #     updated_node = updated_node.deep_replace(
-                        #         anno_ref.annotation, expr
-                        #     )
-                        # else:
                         anno = Annotation(annotation=expr)
                         updated_node = updated_node.with_deep_changes(
-                            anno_ref, annotation=anno
+                            original_param, annotation=anno
                         )
+            # Remove the fix from the class.
             self._fixes.remove(fix)
             self._last_function.pop()
             return updated_node
