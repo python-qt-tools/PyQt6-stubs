@@ -62,9 +62,6 @@ class QBluetoothDeviceDiscoveryAgent(QtCore.QObject):
         NoMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
         ClassicMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
         LowEnergyMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
-        NoMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
-        ClassicMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
-        LowEnergyMethod = ...  # type: QBluetoothDeviceDiscoveryAgent.DiscoveryMethod
     class Error(enum.Enum):
         NoError = ...  # type: QBluetoothDeviceDiscoveryAgent.Error
         InputOutputError = ...  # type: QBluetoothDeviceDiscoveryAgent.Error
@@ -441,7 +438,7 @@ class QBluetoothSocket(QtCore.QIODevice):
     def doDeviceDiscovery(self, service: QBluetoothServiceInfo, openMode: QtCore.QIODeviceBase.OpenModeFlag) -> None: ...
     def setSocketError(self, error: "QBluetoothSocket.SocketError") -> None: ...
     def setSocketState(self, state: "QBluetoothSocket.SocketState") -> None: ...
-    def writeData(self, data: bytes) -> int: ...
+    def writeData(self, data: bytes) -> int: ...  # type: ignore[override]
     def readData(self, maxlen: int) -> bytes: ...
     stateChanged: typing.ClassVar[QtCore.pyqtSignal]
     errorOccurred: typing.ClassVar[QtCore.pyqtSignal]

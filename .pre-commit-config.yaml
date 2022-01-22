@@ -5,6 +5,15 @@ repos:
       - id: isort
         name: isort (python)
         args: [ "--profile", "black", "-l 10000" ]
+        files: ^PyQt6-stubs/
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.9.3
+    hooks:
+      - id: isort
+        name: isort (python)
+        args: [ "--profile", "black", "-l 79" ]
+        exclude: ^PyQt6-stubs/
 
   - repo: https://github.com/psf/black
     rev: 21.9b0

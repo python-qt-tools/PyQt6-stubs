@@ -41,7 +41,11 @@ class SignalFixer(cst.CSTTransformer):
         self._last_class.append(node)
         return True
 
-    def leave_FunctionDef(self, original_node: cst.FunctionDef, _: cst.FunctionDef) -> cst.BaseStatement | cst.FlattenSentinel[cst.BaseStatement] | cst.RemovalSentinel:
+    def leave_FunctionDef(
+        self, original_node: cst.FunctionDef, _: cst.FunctionDef
+    ) -> cst.BaseStatement | cst.FlattenSentinel[
+        cst.BaseStatement
+    ] | cst.RemovalSentinel:
         """Leave the method and change signature if a signal."""
         if not self._last_class:
             return original_node
@@ -67,12 +71,20 @@ class SignalFixer(cst.CSTTransformer):
                 # FlattenSentinel. Just adding a newline char results in an
                 # indented EmptyLine which isn't bad but clutters the diff
                 # unnecessarily
-                empty_nodes = [line.deep_clone() for line in original_node.leading_lines]
-                return cst.FlattenSentinel(cast(Iterable[cst.BaseStatement], [*empty_nodes, node]))
+                empty_nodes = [
+                    line.deep_clone() for line in original_node.leading_lines
+                ]
+                return cst.FlattenSentinel(
+                    cast(Iterable[cst.BaseStatement], [*empty_nodes, node])
+                )
             return node
         return original_node
 
-    def leave_ClassDef(self, original_node: cst.ClassDef, updated_node: cst.ClassDef) -> cst.BaseStatement | cst.FlattenSentinel[cst.BaseStatement] | cst.RemovalSentinel:
+    def leave_ClassDef(
+        self, original_node: cst.ClassDef, updated_node: cst.ClassDef
+    ) -> cst.BaseStatement | cst.FlattenSentinel[
+        cst.BaseStatement
+    ] | cst.RemovalSentinel:
         """Remove a class from the stack and return the updated node."""
         self._last_class.pop()
         return updated_node
