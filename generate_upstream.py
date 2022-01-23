@@ -52,7 +52,7 @@ def download_stubs(download_folder: Path, file_filter: List[str]) -> None:
             print(f"Scanning folder for pyi files {folder}")
             for extracted_file in folder.glob("*.pyi"):
                 if file_filter and extracted_file.stem not in file_filter:
-                    print("Skipping file: %s", extracted_file)
+                    print(f"Skipping file: {extracted_file}")
                     continue
                 copy_file = SRC_DIR / extracted_file.name
                 shutil.copyfile(extracted_file, copy_file)

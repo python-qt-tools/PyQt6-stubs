@@ -108,8 +108,9 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
             return None
 
     def visit_ImportFrom(self, node: ImportFrom) -> bool | None:
-        if cast(Attribute, node.module).value == "PyQt6" and any(
-            isinstance(fix, AddImportFix) for fix in self._generated_fixes
+        if (
+            cast(Attribute, node.module).value == "PyQt6"
+            and self._add_import_fix
         ):
             # Remember the last ImportAlias node after which we will add the
             # missing imports.
