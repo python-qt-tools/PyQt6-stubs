@@ -5,7 +5,7 @@ from typing import List, Optional
 
 
 @dataclass
-class Param:
+class FixParameter:
     """Defines a single Parameter for a fix in AnnotationFix."""
 
     name: str  # name of the parameter
@@ -22,7 +22,7 @@ class AnnotationFix:
     module_name: str  # name of the module in which the fix will be applied
     class_name: str  # name of the class the method belongs to
     method_name: str  # name of the method
-    params: List[Param]  # List of the method's parameters
+    params: List[FixParameter]  # List of the method's parameters
     custom_type: Optional[
         str
     ] = None  # Defines a custom type that will be added once to the module
@@ -34,26 +34,28 @@ ANNOTATION_FIXES = [
         "QtWidgets",
         "QLineEdit",
         "setText",
-        [Param("a0", "typing.Optional[str]", "str")],
+        [FixParameter("a0", "typing.Optional[str]", "str")],
     ),
     AnnotationFix(
         "sip",
         "voidptr",
         "setwriteable",
-        [Param("bool", "bool", None)],
+        [FixParameter("bool", "bool", None)],
     ),
     AnnotationFix(
         "QtCore",
         "QObject",
         "findChildren",
         [
-            Param(
+            FixParameter(
                 "types",
                 "typing.Tuple[typing.Type[QObjectT], ...]",
                 "typing.Tuple",
             ),
-            Param("name", "str", "str"),
-            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+            FixParameter("name", "str", "str"),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
         ],
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
@@ -62,13 +64,15 @@ ANNOTATION_FIXES = [
         "QObject",
         "findChildren",
         [
-            Param(
+            FixParameter(
                 "types",
                 "typing.Tuple[typing.Type[QObjectT], ...]",
                 "typing.Tuple",
             ),
-            Param("re", '"QRegularExpression"', '"QRegularExpression"'),
-            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+            FixParameter("re", '"QRegularExpression"', '"QRegularExpression"'),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
         ],
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
@@ -77,14 +81,44 @@ ANNOTATION_FIXES = [
         "QObject",
         "findChild",
         [
-            Param(
+            FixParameter(
                 "types",
                 "typing.Tuple[typing.Type[QObjectT], ...]",
                 "typing.Tuple",
             ),
-            Param("name", '"str"', '"str"'),
-            Param("options", "Qt.FindChildOption", "Qt.FindChildOption"),
+            FixParameter("name", '"str"', '"str"'),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
         ],
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtDBus",
+        "QDBusAbstractInterface",
+        "asyncCall",
+        [
+            FixParameter("method", "str", "str"),
+            FixParameter("*a1", "typing.Any", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtDBus",
+        "QDBusAbstractInterface",
+        "call",
+        [
+            FixParameter("method", "str", "str"),
+            FixParameter("*a1", "typing.Any", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtDBus",
+        "QDBusAbstractInterface",
+        "call",
+        [
+            FixParameter("mode", '"QDBus.CallMode"', '"QDBus.CallMode"'),
+            FixParameter("method", "str", "str"),
+            FixParameter("*a2", "typing.Any", None),
+        ],
     ),
 ]

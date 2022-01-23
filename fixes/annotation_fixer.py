@@ -1,7 +1,7 @@
 """AnnotationFixer that will fix annotations on class methods."""
 from __future__ import annotations
 
-from typing import List, Union
+from typing import List, Union, cast
 
 from libcst import (
     Annotation,
@@ -13,13 +13,18 @@ from libcst import (
     FlattenSentinel,
     FunctionDef,
     Module,
+    Param,
     RemovalSentinel,
     SimpleStatementLine,
     parse_expression,
     parse_statement,
 )
 
-from fixes.annotation_fixes import ANNOTATION_FIXES, AnnotationFix
+from fixes.annotation_fixes import (
+    ANNOTATION_FIXES,
+    AnnotationFix,
+    FixParameter,
+)
 
 
 class AnnotationFixer(CSTTransformer):
@@ -113,21 +118,38 @@ class AnnotationFixer(CSTTransformer):
                         continue
                     # Fix the parameter
                     if original_param.name.value == param.name:
-                        print(
-                            f"Changing annotation of "
-                            f"{self.function_name}:{original_param.name.value}"
-                            f" to {param.annotation}"
+                        updated_node = self._fix_annotation(
+                            original_param, param, updated_node
                         )
-                        expr = parse_expression(param.annotation)
-                        anno = Annotation(annotation=expr)
-                        updated_node = updated_node.with_deep_changes(
-                            original_param, annotation=anno
-                        )
+                if param.name.startswith("*"):
+                    star_arg = updated_node.params.star_arg
+                    updated_node = self._fix_annotation(
+                        cast(Param, star_arg), param, updated_node
+                    )
             # Remove the fix from the class.
             self._fixes.remove(fix)
             self._last_function.pop()
             return updated_node
         self._last_function.pop()
+        return updated_node
+
+    def _fix_annotation(
+        self,
+        original_param: Param,
+        param: FixParameter,
+        updated_node: FunctionDef,
+    ) -> FunctionDef:
+        """Fix the annotation of the given parameter of the FunctionDef."""
+        print(
+            f"Changing annotation of "
+            f"{self.function_name}:{original_param.name.value}"
+            f" to {param.annotation}"
+        )
+        expr = parse_expression(param.annotation)
+        anno = Annotation(annotation=expr)
+        updated_node = updated_node.with_deep_changes(
+            original_param, annotation=anno
+        )
         return updated_node
 
     def leave_ClassDef(
@@ -152,6 +174,13 @@ class AnnotationFixer(CSTTransformer):
                 fix.class_name == self.class_name
                 and fix.method_name == self.function_name
             ):
+                if len(self._last_function[-1].params.children) - 1 != len(
+                    fix.params
+                ):
+                    # If the number of Parameters does not match the number of
+                    # Parameters to fix, we return.
+                    return None
+
                 for param in self._last_function[-1].params.params:
                     if param.name.value == "self":
                         # ignore self params
@@ -161,8 +190,24 @@ class AnnotationFixer(CSTTransformer):
                         for fix_param in fix.params
                     ):
                         print(f"Fix does not match due to param: {param.name}")
-                        break
-                else:
-                    print(f"Found fix to apply: {fix}")
-                    return fix
+                        return None
+
+                # Check if the function def includes a star parameter and if
+                # it matches one of our fix arguments.
+                star_arg = self._last_function[-1].params.star_arg
+                if (
+                    star_arg
+                    and isinstance(star_arg, Param)
+                    and not any(
+                        fix_param.name == f"*{star_arg.name.value}"
+                        for fix_param in fix.params
+                    )
+                ):
+                    print(
+                        f"Star argument is not matched: *{star_arg.name.value}"
+                    )
+                    return None
+
+                print(f"Found fix to apply: {fix}")
+                return fix
         return None

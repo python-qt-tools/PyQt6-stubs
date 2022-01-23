@@ -8,7 +8,7 @@ import sys
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import Set, Tuple
+from typing import List, Set, Tuple
 
 from libcst import MetadataWrapper, parse_module
 from mypy import api as mypy_api
@@ -26,7 +26,7 @@ RE_NAME_NOT_DEFINED = re.compile(r'Name "(.+)" is not defined')
 IMPORT_FIXED: Set[Tuple[str, str]] = set()
 
 
-def download_stubs(download_folder: Path) -> None:
+def download_stubs(download_folder: Path, file_filter: List[str]) -> None:
     """Download the stubs and copy them to PyQt6-stubs folder."""
     subprocess.check_call(
         [
@@ -53,6 +53,9 @@ def download_stubs(download_folder: Path) -> None:
         for folder in temp_folder.glob("*"):
             print(f"Scanning folder for pyi files {folder}")
             for extracted_file in folder.glob("*.pyi"):
+                if file_filter and extracted_file.stem not in file_filter:
+                    print("Skipping file: %s", extracted_file)
+                    continue
                 copy_file = SRC_DIR / extracted_file.name
                 shutil.copyfile(extracted_file, copy_file)
                 subprocess.check_call(["git", "add", str(copy_file)])
@@ -163,6 +166,9 @@ def fix_annotation_for_file(  # pylint: disable=too-many-branches
 
 
 if __name__ == "__main__":
+    for arg in sys.argv[1:]:
+        print(f"Adding file to process list: {arg}")
+    files = sys.argv[1:]
 
     # Create PyQt6-stubs folder if necessary
     SRC_DIR.mkdir(exist_ok=True)
@@ -174,11 +180,11 @@ if __name__ == "__main__":
 
     # Download required packages
     with tempfile.TemporaryDirectory() as temp_dwld_folder:
-        download_stubs(Path(temp_dwld_folder))
+        download_stubs(Path(temp_dwld_folder), files)
 
     # Now apply the fixes:
     for file in SRC_DIR.glob("*.pyi"):
-        if file.stem.startswith("__"):
+        if file.stem.startswith("__") or files and file.stem not in files:
             print(f"Ignoring file {file}")
             continue
 
