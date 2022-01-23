@@ -225,6 +225,11 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                     updated_node = self._fix_annotation(
                         cast(Param, star_arg), param, updated_node
                     )
+            if function_fix.return_value:
+                expr = parse_expression(function_fix.return_value)
+                updated_node = updated_node.with_changes(
+                    returns=Annotation(expr)
+                )
             # Remove the fix from the class.
             self._fixes.remove(function_fix)
             self._last_function.pop()

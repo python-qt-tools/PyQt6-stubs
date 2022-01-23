@@ -25,6 +25,7 @@ class AnnotationFix:
     class_name: str  # name of the class the method belongs to
     method_name: str  # name of the method
     params: List[FixParameter]  # List of the method's parameters
+    return_value: Optional[str] = None
     custom_type: Optional[
         str
     ] = None  # Defines a custom type that will be added once to the module
@@ -89,6 +90,24 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
         "findChildren",
         [
             FixParameter(
+                "type",
+                "typing.Type[QObjectT]",
+                "type",
+            ),
+            FixParameter("name", "str", "str"),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
+        ],
+        'typing.List["QObjectT"]',
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChildren",
+        [
+            FixParameter(
                 "types",
                 "typing.Tuple[typing.Type[QObjectT], ...]",
                 "typing.Tuple",
@@ -98,6 +117,25 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
                 "options", "Qt.FindChildOption", "Qt.FindChildOption"
             ),
         ],
+        'typing.List["QObjectT"]',
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChildren",
+        [
+            FixParameter(
+                "type",
+                "typing.Type[QObjectT]",
+                "type",
+            ),
+            FixParameter("re", '"QRegularExpression"', '"QRegularExpression"'),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
+        ],
+        'typing.List["QObjectT"]',
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
     AnnotationFix(
@@ -115,6 +153,25 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
                 "options", "Qt.FindChildOption", "Qt.FindChildOption"
             ),
         ],
+        'typing.List["QObjectT"]',
+        'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QObject",
+        "findChild",
+        [
+            FixParameter(
+                "type",
+                "typing.Type[QObjectT]",
+                "type",
+            ),
+            FixParameter("name", '"str"', '"str"'),
+            FixParameter(
+                "options", "Qt.FindChildOption", "Qt.FindChildOption"
+            ),
+        ],
+        '"QObjectT"',
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
     AnnotationFix(
@@ -132,6 +189,7 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
                 "options", "Qt.FindChildOption", "Qt.FindChildOption"
             ),
         ],
+        '"QObjectT"',
         'QObjectT = typing.TypeVar("QObjectT", bound=QObject)',
     ),
     AnnotationFix(
@@ -278,6 +336,114 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
             "def __le__(self, other: object) -> bool: ...",
             "def __lt__(self, other: object) -> bool: ...",
             "def __ne__(self, other: object) -> bool: ...",
+        ],
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QCoreApplication",
+        "instance",
+        [],
+        'typing.Optional["QCoreApplication"]',
+        static=True,
+    ),
+    AddAnnotationFix(
+        "QtCore",
+        "QCoreApplication",
+        [
+            "applicationNameChanged: typing.ClassVar[pyqtSignal]",
+            "applicationVersionChanged: typing.ClassVar[pyqtSignal]",
+            "organizationDomainChanged: typing.ClassVar[pyqtSignal]",
+            "organizationNameChanged: typing.ClassVar[pyqtSignal]",
+        ],
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QJsonDocument",
+        "__init__",
+        [
+            FixParameter(
+                "array",
+                'typing.Iterable[typing.Union["QJsonValue", "QJsonValue.Type", typing.Dict[str, "QJsonValue"], bool, int, float, str]]',
+                'typing.Iterable["QJsonValue"]',
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QJsonDocument",
+        "setArray",
+        [
+            FixParameter(
+                "array",
+                'typing.Iterable[typing.Union["QJsonValue", "QJsonValue.Type", typing.Dict[str, "QJsonValue"], bool, int, float, str]]',
+                'typing.Iterable["QJsonValue"]',
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtCore",
+        "QJsonValue",
+        "toArray",
+        [
+            FixParameter(
+                "defaultValue",
+                'typing.Iterable[typing.Union["QJsonValue", "QJsonValue.Type", typing.Dict[str, "QJsonValue"], bool, int, float, str]]',
+                'typing.Iterable["QJsonValue"]',
+            ),
+        ],
+    ),
+    AddAnnotationFix(
+        "QtCore",
+        "QPoint",
+        [
+            'def __add__(self, point: "QPoint") -> "QPoint": ...',
+            'def __sub__(self, point: "QPoint") -> "QPoint": ...',
+            'def __mul__(self, factor: float) -> "QPoint": ...',
+            'def __truediv__(self, divisor: float) -> "QPoint": ...',
+        ],
+    ),
+    AddAnnotationFix(
+        "QtCore",
+        "QPointF",
+        [
+            'def __add__(self, point: "QPointF") -> "QPointF": ...',
+            'def __sub__(self, point: "QPointF") -> "QPointF": ...',
+            'def __mul__(self, factor: float) -> "QPointF": ...',
+            'def __truediv__(self, divisor: float) -> "QPointF": ...',
+        ],
+    ),
+    AddAnnotationFix(
+        "QtCore",
+        "QSize",
+        [
+            "def __eq__(self, value: object) -> bool: ...",
+            "def __ne__(self, value: object) -> bool: ...",
+            'def __add__(self, value: "QSize") -> "QSize": ...',
+            'def __iadd__(self, value: "QSize") -> "QSize": ...',
+            'def __sub__(self, value: "QSize") -> "QSize": ...',
+            'def __isub__(self, value: "QSize") -> "QSize": ...',
+            'def __mul__(self, value: float) -> "QSize": ...',
+            'def __rmul__(self, value: float) -> "QSize": ...',
+            'def __imul__(self, value: float) -> "QSize": ...',
+            'def __truediv__(self, value: float) -> "QSize": ...',
+            'def __itruediv__(self, value: float) -> "QSize": ...',
+        ],
+    ),
+    AddAnnotationFix(
+        "QtCore",
+        "QSizeF",
+        [
+            "def __eq__(self, value: object) -> bool: ...",
+            "def __ne__(self, value: object) -> bool: ...",
+            'def __add__(self, value: "QSizeF") -> "QSizeF": ...',
+            'def __iadd__(self, value: "QSizeF") -> "QSizeF": ...',
+            'def __sub__(self, value: "QSizeF") -> "QSizeF": ...',
+            'def __isub__(self, value: "QSizeF") -> "QSizeF": ...',
+            'def __mul__(self, value: float) -> "QSizeF": ...',
+            'def __rmul__(self, value: float) -> "QSizeF": ...',
+            'def __imul__(self, value: float) -> "QSizeF": ...',
+            'def __truediv__(self, value: float) -> "QSizeF": ...',
+            'def __itruediv__(self, value: float) -> "QSizeF": ...',
         ],
     ),
 ]
