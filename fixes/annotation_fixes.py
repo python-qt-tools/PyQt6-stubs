@@ -26,6 +26,7 @@ class AnnotationFix:
     custom_type: Optional[
         str
     ] = None  # Defines a custom type that will be added once to the module
+    static: bool = False  # Is the method static?
 
 
 # Fix definitions
@@ -119,6 +120,107 @@ ANNOTATION_FIXES = [
             FixParameter("mode", '"QDBus.CallMode"', '"QDBus.CallMode"'),
             FixParameter("method", "str", "str"),
             FixParameter("*a2", "typing.Any", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QAbstractItemView",
+        "setModel",
+        [
+            FixParameter(
+                "model",
+                "typing.Optional[QtCore.QAbstractItemModel]",
+                "QtCore.QAbstractItemModel",
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QColumnView",
+        "setModel",
+        [
+            FixParameter(
+                "model",
+                "typing.Optional[QtCore.QAbstractItemModel]",
+                "QtCore.QAbstractItemModel",
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QHeaderView",
+        "setModel",
+        [
+            FixParameter(
+                "model",
+                "typing.Optional[QtCore.QAbstractItemModel]",
+                "QtCore.QAbstractItemModel",
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QTableView",
+        "setModel",
+        [
+            FixParameter(
+                "model",
+                "typing.Optional[QtCore.QAbstractItemModel]",
+                "QtCore.QAbstractItemModel",
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QTreeView",
+        "setModel",
+        [
+            FixParameter(
+                "model",
+                "typing.Optional[QtCore.QAbstractItemModel]",
+                "QtCore.QAbstractItemModel",
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QMessageBox",
+        "aboutQt",
+        [
+            FixParameter(
+                "parent",
+                "typing.Optional[QWidget]",
+                "QWidget",
+            ),
+            FixParameter("title", "str", "str"),
+        ],
+        static=True,
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QMessageBox",
+        "about",
+        [
+            FixParameter(
+                "parent",
+                "typing.Optional[QWidget]",
+                "QWidget",
+            ),
+            FixParameter("caption", "str", "str"),
+            FixParameter("text", "str", "str"),
+        ],
+        static=True,
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QProgressDialog",
+        "setCancelButton",
+        [
+            FixParameter(
+                "button",
+                "typing.Optional[QPushButton]",
+                "QPushButton",
+            ),
         ],
     ),
 ]

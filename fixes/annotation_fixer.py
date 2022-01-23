@@ -174,8 +174,9 @@ class AnnotationFixer(CSTTransformer):
                 fix.class_name == self.class_name
                 and fix.method_name == self.function_name
             ):
-                if len(self._last_function[-1].params.children) - 1 != len(
-                    fix.params
+                child_count = len(self._last_function[-1].params.children)
+                if (fix.static and child_count != len(fix.params)) or (
+                    not fix.static and child_count - 1 != len(fix.params)
                 ):
                     # If the number of Parameters does not match the number of
                     # Parameters to fix, we return.
