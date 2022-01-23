@@ -1,7 +1,10 @@
 """Definition of all annotation fixes."""
 
 from dataclasses import dataclass
-from typing import List, Optional
+from enum import IntEnum
+from typing import Any, List, Optional, Union
+
+from libcst import Decorator, FunctionDef
 
 
 @dataclass
@@ -27,6 +30,60 @@ class AnnotationFix:
         str
     ] = None  # Defines a custom type that will be added once to the module
     static: bool = False  # Is the method static?
+
+
+@dataclass
+class CommentFix:
+    """Fixes a FunctionDef or a Decorator by appending a comment to it."""
+
+    node: Union[FunctionDef, Decorator]
+    comment: str
+
+
+@dataclass
+class RemoveFix:
+    """Remove a node because mypy detected it as obsolete."""
+
+    node: Union[FunctionDef, Decorator]
+
+
+@dataclass
+class RemoveOverloadDecoratorFix:
+    """Remove an overload Decorator because the method is the last method left."""
+
+    node: Decorator
+
+
+@dataclass
+class AddImportFix:
+    """Add missing imports to PyQt6 imports."""
+
+    missing_imports: List[str]
+
+
+@dataclass
+class MypyFix:
+    """Fix that was detected by mypy."""
+
+    class Type(IntEnum):
+        """Type of fix that was detected by mypy."""
+
+        # When a child class implements an overridden method different from
+        # its parent
+        OVERRIDE = 1
+        # If a function's signature will never be matched since another
+        # signature has same or broader parameters.
+        SIGNATURE_MISMATCH = 2
+        # Mismatch when some but not all functions are decorated with
+        # @staticmethod
+        STATIC_MISMATCH = 3
+        # Imports from PyQt6 that are missing.
+        MISSING_IMPORT = 4
+
+    module_name: str  # name of the module in which the fix will be applied
+    line_nbr: Optional[int]  # line in which the fix will be done
+    fix_type: Type
+    data: Any = None
 
 
 # Fix definitions

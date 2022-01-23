@@ -14,7 +14,9 @@ from libcst import MetadataWrapper, parse_module
 from mypy import api as mypy_api
 
 from fixes.annotation_fixer import AnnotationFixer
+from fixes.annotation_fixes import MypyFix
 from fixes.custom_fixer import CustomFixer
+from fixes.fix_creator import FixCreator
 from fixes.signal_fixer import SignalFixer
 from version import PYQT_VERSION
 
@@ -63,18 +65,16 @@ def download_stubs(download_folder: Path, file_filter: List[str]) -> None:
 
 def fix_annotation_for_file(  # pylint: disable=too-many-branches
     file_to_fix: pathlib.Path,
-) -> None:
+) -> List[MypyFix]:
     """Detect common errors with mypy for the file and fix them."""
     print(f"Fixing annotations with mypy for file: {file_to_fix}")
-    mypy_result = mypy_api.run([str(file_to_fix)])[0]
+    mypy_result = mypy_api.run([str(file_to_fix), "--warn-unused-ignores"])[0]
 
     if mypy_result.startswith("Success"):
         print(f"Mypy did not detect any errors for file {file_to_fix}")
-        return
+        return []
 
-    with file_to_fix.open("r", encoding="utf-8") as handle:
-        lines = handle.readlines()
-
+    fixes: List[MypyFix] = []
     missing_imports = []
 
     for line in mypy_result.split("\n"):
@@ -106,10 +106,20 @@ def fix_annotation_for_file(  # pylint: disable=too-many-branches
             'Overload does not consistently use the "@staticmethod" '
             "decorator on all function signatures."
         ):
-            print(f"Adding '# type: ignore[misc]' to line {line_nbr}:{line}")
-            lines[line_nbr - 1] = (
-                lines[line_nbr - 1][:-1] + "  # type: ignore[misc]\n"
+            new_fix = MypyFix(
+                file_to_fix.stem, line_nbr, MypyFix.Type.STATIC_MISMATCH
             )
+            for fix in fixes:
+                if fix.line_nbr == line_nbr:
+                    if fix.fix_type != new_fix.fix_type:
+                        raise RuntimeError(
+                            f"Fix for line {line_nbr} is " f"already here!"
+                        )
+                    print(f"Fix for line {line_nbr} was already detected.")
+                    break
+            else:
+                print(f"Appending fix for line {line_nbr}: {error_msg}")
+                fixes.append(new_fix)
         elif (
             "Signature of" in error_msg
             and "incompatible with supertype" in error_msg
@@ -117,28 +127,46 @@ def fix_annotation_for_file(  # pylint: disable=too-many-branches
             " is incompatible with supertype " in error_msg
             or " incompatible with return type " in error_msg
         ):
-            print(
-                f"Adding '# type: ignore[override]' to line {line_nbr}:{line}"
-            )
-            lines[line_nbr - 1] = (
-                lines[line_nbr - 1][:-1] + "  # type: ignore[override]\n"
-            )
+            for fix in fixes:
+                if fix.line_nbr == line_nbr:
+                    if fix.fix_type != MypyFix.Type.OVERRIDE:
+                        raise RuntimeError(
+                            f"Fix for line {line_nbr} is " f"already here!"
+                        )
+                    print(f"Fix for line {line_nbr} was already detected.")
+                    break
+            else:
+                print(f"Appending fix for line {line_nbr}: {error_msg}")
+                fixes.append(
+                    MypyFix(file_to_fix.stem, line_nbr, MypyFix.Type.OVERRIDE)
+                )
         elif 'Unused "type: ignore" comment' in error_msg:
             print(
                 f"Removing unnecessary '# type: ignore' from line {line_nbr}:{line}"
             )
-            codeline = lines[line_nbr - 1]
-            codeline = codeline[: codeline.index("#")] + "\n"
-            lines[line_nbr - 1] = codeline
+            raise ValueError
         elif (
             "Overloaded function signature" in error_msg
             and "will never be matched: signature" in error_msg
             and "parameter type(s) are the same or broader" in error_msg
         ):
-            print(f"Adding '# type: ignore[misc]' to line {line_nbr}:{line}")
-            lines[line_nbr - 1] = (
-                lines[line_nbr - 1][:-1] + "  # type: ignore[misc]\n"
-            )
+            for fix in fixes:
+                if fix.line_nbr == line_nbr:
+                    if fix.fix_type != MypyFix.Type.SIGNATURE_MISMATCH:
+                        raise RuntimeError(
+                            f"Fix for line {line_nbr} is " f"already here!"
+                        )
+                    print(f"Fix for line {line_nbr} was already detected.")
+                    break
+            else:
+                print(f"Appending fix for line {line_nbr}: {error_msg}")
+                fixes.append(
+                    MypyFix(
+                        file_to_fix.stem,
+                        line_nbr,
+                        MypyFix.Type.SIGNATURE_MISMATCH,
+                    )
+                )
         else:
             print(
                 f"WARNING: Could not fix error in line {line_nbr}: {error_msg}"
@@ -150,19 +178,16 @@ def fix_annotation_for_file(  # pylint: disable=too-many-branches
             missing_import in ("QtCore, QtGui")
             for missing_import in missing_imports
         )
+        fixes.append(
+            MypyFix(
+                file_to_fix.stem,
+                None,
+                MypyFix.Type.MISSING_IMPORT,
+                set(missing_imports),
+            )
+        )
 
-        for idx, line in enumerate(lines):
-            if line.startswith("from PyQt6 import"):
-                print(f"Adding missing imports to line {line.strip()}")
-                for missing_import in set(missing_imports):
-                    lines[idx] = f"{lines[idx].strip()}, {missing_import} \n"
-                print(f"Fixed import line: {lines[idx].strip()}")
-                break
-        else:
-            raise ValueError("Could not find imports from PyQt6")
-
-    with open(file_to_fix, "w", encoding="utf-8") as w_handle:
-        w_handle.writelines(lines)
+    return fixes
 
 
 if __name__ == "__main__":
@@ -188,19 +213,25 @@ if __name__ == "__main__":
             print(f"Ignoring file {file}")
             continue
 
-        fix_annotation_for_file(file)
+        # Run mypy and find errors to fix.
+        mypy_fixes = fix_annotation_for_file(file)
 
         with file.open("r", encoding="utf-8") as fhandle:
             stub_tree = MetadataWrapper(parse_module(fhandle.read()))
 
+        # Create AnnotationFixes from the MypyFixes.
+        fix_creator = FixCreator(file.stem, mypy_fixes)
+        stub_tree.visit(fix_creator)
+        fixes = fix_creator.fixes
+
+        annotation_fixer = AnnotationFixer(file.stem, fixes)
+        modified_tree = stub_tree.visit(annotation_fixer)
         try:
             signal_fixer = SignalFixer(file.stem)
         except ModuleNotFoundError:
             print(f"Could not import module {file.stem}")
             continue
-        modified_tree = stub_tree.visit(signal_fixer)
-        annotation_fixer = AnnotationFixer(file.stem)
-        modified_tree = modified_tree.visit(annotation_fixer)
+        modified_tree = modified_tree.visit(signal_fixer)
         custom_fixer = CustomFixer(file.stem)
         modified_tree = modified_tree.visit(custom_fixer)
 
