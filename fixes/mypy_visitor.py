@@ -51,6 +51,9 @@ class MypyVisitor(CSTVisitor):
         self._errors: Dict[int, MypyVisitor.ErrorType] = {}
         self._missing_imports: List[str] = []
 
+        self.last_class_method: Dict[str, FunctionDef] = {}
+        self._last_class: List[ClassDef] = []
+
         self._parse_mypy_result()
         if self._missing_imports:
             self._add_fix_for_missing_imports()
@@ -158,6 +161,19 @@ class MypyVisitor(CSTVisitor):
             self.fixes.append(fix)
         except ValueError:
             pass
+        try:
+            self.last_class_method[
+                self._last_class[-1].name.value
+            ] = original_node
+        except IndexError:
+            # If not in a class, skip.
+            pass
+
+    def visit_ClassDef(self, node: ClassDef) -> bool:
+        """Put a class on top of the stack when visiting."""
+        self._last_class.append(node)
+        # Visit every class in case there's a class in a class.
+        return True
 
     def leave_ClassDef(self, original_node: ClassDef) -> None:
         """Check if any RemoveFixes made Decorators obsolete."""
@@ -180,6 +196,7 @@ class MypyVisitor(CSTVisitor):
                                 RemoveOverloadDecoratorFix(decorator)
                             )
         self._class_functions.clear()
+        self._last_class.pop()
 
     @staticmethod
     def _is_overload_decorator(decorator: Decorator) -> bool:

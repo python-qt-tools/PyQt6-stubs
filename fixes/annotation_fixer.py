@@ -1,11 +1,12 @@
 """AnnotationFixer that will fix annotations on class methods."""
 from __future__ import annotations
 
-from typing import List, TypeVar, Union, cast
+from typing import Dict, List, Optional, Sequence, TypeVar, Union, cast
 
 from libcst import (
     Annotation,
     Assign,
+    Attribute,
     BaseSmallStatement,
     BaseStatement,
     ClassDef,
@@ -17,17 +18,19 @@ from libcst import (
     ImportAlias,
     ImportFrom,
     Module,
+    Name,
     Param,
     RemovalSentinel,
     SimpleStatementLine,
+    SimpleStatementSuite,
     parse_expression,
     parse_statement,
 )
-from libcst.matchers import Name
 from libcst.metadata import PositionProvider
 
 from fixes.annotation_fixes import (
     ANNOTATION_FIXES,
+    AddAnnotationFix,
     AddImportFix,
     AnnotationFix,
     CommentFix,
@@ -37,7 +40,9 @@ from fixes.annotation_fixes import (
 )
 
 
-class AnnotationFixer(CSTTransformer):
+class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
+    CSTTransformer
+):
     """AnnotationFixer that will fix annotations on class methods."""
 
     METADATA_DEPENDENCIES = (PositionProvider,)
@@ -48,6 +53,7 @@ class AnnotationFixer(CSTTransformer):
         fixes: List[
             CommentFix | RemoveFix | RemoveOverloadDecoratorFix | AddImportFix
         ],
+        last_class_method: Dict[str, FunctionDef],
     ):
         super().__init__()
 
@@ -56,21 +62,34 @@ class AnnotationFixer(CSTTransformer):
         self._last_function: List[FunctionDef] = []
 
         # Fixes that will be applied for the current module.
-        self._fixes: List[AnnotationFix] = [
+        self._fixes: List[AnnotationFix | AddAnnotationFix] = [
             fix for fix in ANNOTATION_FIXES if fix.module_name == mod_name
         ]
 
         # Custom type definitons to be inserted after PYQT_SLOT/PYQT_SIGNAL
         self._type_defs = set(
-            fix.custom_type for fix in self._fixes if fix.custom_type
+            fix.custom_type
+            for fix in self._fixes
+            if isinstance(fix, AnnotationFix) and fix.custom_type
         )
         self._insert_type_defs = False
 
         # Generated fixes (i.e. from mypy)
-        self._generated_fixes = fixes
+        self._generated_fixes = [
+            fix for fix in fixes if not isinstance(fix, AddImportFix)
+        ]
+        try:
+            self._add_import_fix: Optional[AddImportFix] = [
+                fix for fix in fixes if isinstance(fix, AddImportFix)
+            ][0]
+        except IndexError:
+            self._add_import_fix = None
 
         # Node after which the missing imports from PyQt6 will be appended
         self._import_alias_node: ImportAlias | None = None
+
+        # Holds the last method for every class:
+        self._last_class_method = last_class_method
 
     @property
     def class_name(self) -> str | None:
@@ -89,29 +108,33 @@ class AnnotationFixer(CSTTransformer):
             return None
 
     def visit_ImportFrom(self, node: ImportFrom) -> bool | None:
-        if node.module.value == "PyQt6" and any(
+        if cast(Attribute, node.module).value == "PyQt6" and any(
             isinstance(fix, AddImportFix) for fix in self._generated_fixes
         ):
             # Remember the last ImportAlias node after which we will add the
             # missing imports.
-            self._import_alias_node = node.names[-1]
+            try:
+                self._import_alias_node = cast(
+                    Sequence[ImportAlias], node.names
+                )[-1]
+            except IndexError:
+                # in case it's a ImportStar
+                return False
             return True
         return False
 
     def leave_ImportAlias(
         self, original_node: ImportAlias, updated_node: ImportAlias
     ) -> Union["ImportAlias", FlattenSentinel["ImportAlias"], RemovalSentinel]:
-        if self._import_alias_node:
-            for fix in self._generated_fixes:
-                if isinstance(fix, AddImportFix):
-                    exprs = [
-                        cast(Name, parse_expression(missing_import))
-                        for missing_import in fix.missing_imports
-                    ]
-                    new_aliases = [ImportAlias(expr) for expr in exprs]
-                    self._generated_fixes.remove(fix)
-                    self._import_alias_node = None
-                    return FlattenSentinel([original_node] + new_aliases)
+        if self._import_alias_node and self._add_import_fix:
+            exprs = [
+                cast(Name, parse_expression(missing_import))
+                for missing_import in self._add_import_fix.missing_imports
+            ]
+            new_aliases = [ImportAlias(expr) for expr in exprs]
+            self._add_import_fix = None
+            self._import_alias_node = None
+            return FlattenSentinel([original_node] + new_aliases)
         return original_node
 
     def leave_Assign(
@@ -172,21 +195,21 @@ class AnnotationFixer(CSTTransformer):
                 return RemovalSentinel.REMOVE
         return original_node
 
-    def leave_FunctionDef(
+    def leave_FunctionDef(  # pylint: disable=too-many-branches
         self, original_node: FunctionDef, updated_node: FunctionDef
-    ) -> Union[FunctionDef, FlattenSentinel[Decorator], RemovalSentinel]:
+    ) -> Union[BaseStatement, FlattenSentinel[BaseStatement], RemovalSentinel]:
         """Remove a function from the stack and return the updated node."""
-        if not self._last_class:
+        if self.class_name is None:
             # We need a class to operate, currently.
             self._last_function.pop()
             return updated_node
 
         # Check if we can fix the function.
-        fix = self._get_fix()
-        if fix:
+        function_fix = self._get_fix()
+        if function_fix:
             # Check every parameter and find the appropriate one to fix in the
             # source code.
-            for param in fix.params:
+            for param in function_fix.params:
                 for original_param in updated_node.params.params:
                     if original_param.name.value == "self":
                         # Can we fix self? ;)
@@ -202,25 +225,44 @@ class AnnotationFixer(CSTTransformer):
                         cast(Param, star_arg), param, updated_node
                     )
             # Remove the fix from the class.
-            self._fixes.remove(fix)
+            self._fixes.remove(function_fix)
             self._last_function.pop()
             return updated_node
 
         mypy_fix = self._get_mypy_fix(original_node)
         if mypy_fix:
             # If we have two fixes, this might have unforeseen consequences.
-            assert not fix
+            assert not function_fix
             if isinstance(mypy_fix, CommentFix):
-                updated_node = self._apply_comment_fix(mypy_fix, updated_node)
+                return_value: BaseStatement | RemovalSentinel = (
+                    self._apply_comment_fix(mypy_fix, updated_node)
+                )
             elif isinstance(mypy_fix, RemoveFix):
                 print(
                     f"Fixing method by removing it: {self.class_name}.{original_node.name.value}"
                 )
                 assert original_node == mypy_fix.node
-                updated_node = RemovalSentinel.REMOVE
+                return_value = RemovalSentinel.REMOVE
                 self._generated_fixes.remove(mypy_fix)
             self._last_function.pop()
-            return updated_node
+            return return_value
+
+        if self._last_class_method[self.class_name] == original_node:
+            for fix in self._fixes:
+                if (
+                    isinstance(fix, AddAnnotationFix)
+                    and self.class_name == fix.class_name
+                ):
+                    statements = [
+                        parse_statement(annotation)
+                        for annotation in fix.annotations
+                    ]
+                    self._fixes.remove(fix)
+                    self._last_function.pop()
+                    return FlattenSentinel(
+                        [original_node] + cast(List[FunctionDef], statements)
+                    )
+
         self._last_function.pop()
         return updated_node
 
@@ -264,7 +306,8 @@ class AnnotationFixer(CSTTransformer):
         """Return the AnnotationFix for the current method if available."""
         for fix in self._fixes:
             if (
-                fix.class_name == self.class_name
+                isinstance(fix, AnnotationFix)
+                and fix.class_name == self.class_name
                 and fix.method_name == self.function_name
             ):
                 child_count = len(self._last_function[-1].params.children)
@@ -308,7 +351,7 @@ class AnnotationFixer(CSTTransformer):
 
     def _get_mypy_fix(
         self, node: FunctionDef | Decorator
-    ) -> CommentFix | None:
+    ) -> CommentFix | RemoveFix | RemoveOverloadDecoratorFix | None:
         """Return a MypyFix for the given line number if available."""
         for fix in self._generated_fixes:
             if fix.node == node:
@@ -327,7 +370,9 @@ class AnnotationFixer(CSTTransformer):
             if isinstance(updated_node, Decorator):
                 change_node = updated_node.trailing_whitespace
             else:
-                change_node = updated_node.body.trailing_whitespace
+                change_node = cast(
+                    SimpleStatementSuite, updated_node.body
+                ).trailing_whitespace
             updated_node = updated_node.with_deep_changes(
                 change_node, comment=comment
             )

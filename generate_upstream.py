@@ -92,7 +92,9 @@ if __name__ == "__main__":
         fix_creator = MypyVisitor(file)
         stub_tree.visit(fix_creator)
 
-        annotation_fixer = AnnotationFixer(file.stem, fix_creator.fixes)
+        annotation_fixer = AnnotationFixer(
+            file.stem, fix_creator.fixes, fix_creator.last_class_method
+        )
         modified_tree = stub_tree.visit(annotation_fixer)
         try:
             signal_fixer = SignalFixer(file.stem)

@@ -60,8 +60,17 @@ class AddImportFix:
     missing_imports: List[str]
 
 
+@dataclass
+class AddAnnotationFix:
+    """Adds annotations to a class."""
+
+    module_name: str  # name of the module in which the fix will be applied
+    class_name: str  # name of the class the method belongs to
+    annotations: List[str]  # annotations to be added.
+
+
 # Fix definitions
-ANNOTATION_FIXES = [
+ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
     AnnotationFix(
         "QtWidgets",
         "QLineEdit",
@@ -252,6 +261,23 @@ ANNOTATION_FIXES = [
                 "typing.Optional[QPushButton]",
                 "QPushButton",
             ),
+        ],
+    ),
+    AddAnnotationFix(
+        "QtWidgets",
+        "QTreeWidgetItem",
+        ['def __lt__(self, other: "QTreeWidgetItem") -> bool: ...'],
+    ),
+    AddAnnotationFix(
+        "QtWidgets",
+        "QTableWidgetItem",
+        [
+            "def __eq__(self, other: object) -> bool: ...",
+            "def __ge__(self, other: object) -> bool: ...",
+            "def __gt__(self, other: object) -> bool: ...",
+            "def __le__(self, other: object) -> bool: ...",
+            "def __lt__(self, other: object) -> bool: ...",
+            "def __ne__(self, other: object) -> bool: ...",
         ],
     ),
 ]
