@@ -3,4 +3,5 @@ libcst==0.4.0
 mypy==0.931
 pylint==2.12.2
 PyQt6==6.2.2
+pytest==6.2.5
 setuptools==60.5.0

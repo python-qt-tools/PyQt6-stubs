@@ -38,6 +38,7 @@ repos:
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
       - id: requirements-txt-fixer
+        exclude: ^tests
 
   -   repo: https://github.com/pre-commit/pygrep-hooks
       rev: v1.9.0
@@ -51,6 +52,7 @@ repos:
         entry: pylint
         language: system
         types: [ python ]
+        exclude: ^tests
 
   # flake8
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -65,6 +67,7 @@ repos:
           # E501 (line-length) don't need this for stubs.
           - "--ignore=W503,E203,E501"
         types: [ python ]
+        exclude: ^tests
 
   - repo: local
     hooks:
@@ -74,3 +77,4 @@ repos:
         language: system
         types: [ python ]
         args: [ "--warn-unused-ignores", "--warn-redundant-casts", "--warn-unused-configs", "--namespace-packages", "--explicit-package-bases", "--config-file", "mypy.ini" ]
+        exclude: ^tests
