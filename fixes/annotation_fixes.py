@@ -446,4 +446,130 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
             'def __itruediv__(self, value: float) -> "QSizeF": ...',
         ],
     ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawConvexPolygon",
+        [
+            FixParameter("point", "QtCore.QPointF", "QtCore.QPointF"),
+            FixParameter("*a1", "QtCore.QPointF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawConvexPolygon",
+        [
+            FixParameter("point", "QtCore.QPoint", "QtCore.QPoint"),
+            FixParameter("*a1", "QtCore.QPoint", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPolygon",
+        [
+            FixParameter("point", "QtCore.QPointF", "QtCore.QPointF"),
+            FixParameter("*a1", "QtCore.QPointF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPolygon",
+        [
+            FixParameter("point", "QtCore.QPoint", "QtCore.QPoint"),
+            FixParameter("*a1", "QtCore.QPoint", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPolyline",
+        [
+            FixParameter("point", "QtCore.QPointF", "QtCore.QPointF"),
+            FixParameter("*a1", "QtCore.QPointF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPolyline",
+        [
+            FixParameter("point", "QtCore.QPoint", "QtCore.QPoint"),
+            FixParameter("*a1", "QtCore.QPoint", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawRects",
+        [
+            FixParameter("rect", "QtCore.QRectF", "QtCore.QRectF"),
+            FixParameter("*a1", "QtCore.QRectF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawRects",
+        [
+            FixParameter("rect", "QtCore.QRect", "QtCore.QRect"),
+            FixParameter("*a1", "QtCore.QRect", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawLines",
+        [
+            FixParameter("line", "QtCore.QLineF", "QtCore.QLineF"),
+            FixParameter("*a1", "QtCore.QLineF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawLines",
+        [
+            FixParameter("line", "QtCore.QLine", "QtCore.QLine"),
+            FixParameter("*a1", "QtCore.QLine", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawLines",
+        [
+            FixParameter("pointPair", "QtCore.QPointF", "QtCore.QPointF"),
+            FixParameter("*a1", "QtCore.QPointF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawLines",
+        [
+            FixParameter("pointPair", "QtCore.QPoint", "QtCore.QPoint"),
+            FixParameter("*a1", "QtCore.QPoint", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPoints",
+        [
+            FixParameter("point", "QtCore.QPointF", "QtCore.QPointF"),
+            FixParameter("*a1", "QtCore.QPointF", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPainter",
+        "drawPoints",
+        [
+            FixParameter("point", "QtCore.QPoint", "QtCore.QPoint"),
+            FixParameter("*a1", "QtCore.QPoint", None),
+        ],
+    ),
 ]

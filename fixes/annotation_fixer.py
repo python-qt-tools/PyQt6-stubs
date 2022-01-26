@@ -23,6 +23,7 @@ from libcst import (
     RemovalSentinel,
     SimpleStatementLine,
     SimpleStatementSuite,
+    SimpleString,
     parse_expression,
     parse_statement,
 )
@@ -324,16 +325,8 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                     # Parameters to fix, we return.
                     return None
 
-                for param in self._last_function[-1].params.params:
-                    if param.name.value == "self":
-                        # ignore self params
-                        continue
-                    if not any(
-                        fix_param.name == param.name.value
-                        for fix_param in fix.params
-                    ):
-                        print(f"Fix does not match due to param: {param.name}")
-                        return None
+                if not self._check_parameters(fix):
+                    continue
 
                 # Check if the function def includes a star parameter and if
                 # it matches one of our fix arguments.
@@ -354,6 +347,44 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                 print(f"Found fix to apply: {fix}")
                 return fix
         return None
+
+    def _check_parameters(self, fix: AnnotationFix) -> bool:
+        """Check if the parameters of the last function match the given fix."""
+        for param in self._last_function[-1].params.params:
+            if param.name.value == "self":
+                # ignore self params
+                continue
+            for fix_param in fix.params:
+                if fix_param.name.startswith("*"):
+                    # Check in parent method against StarArg
+                    continue
+                same_name = fix_param.name == param.name.value
+                if param.annotation is not None:
+                    code = self._code(param.annotation)
+                    same_annotation = code == fix_param.annotation
+                else:
+                    same_annotation = fix_param.annotation is None
+                if not (same_name and same_annotation):
+                    print(f"Fix does not match due to param: {param.name}")
+                    return False
+        return True
+
+    @staticmethod
+    def _code(annotation: Annotation) -> str:
+        """Return the code as str for the annotation."""
+        if isinstance(annotation.annotation, Attribute) and hasattr(
+            annotation.annotation, "dot"
+        ):
+            assert isinstance(annotation.annotation.value, Name)
+            return (
+                f"{annotation.annotation.value.value}."
+                f"{annotation.annotation.attr.value}"
+            )
+        if isinstance(annotation.annotation, SimpleString):
+            return annotation.annotation.value
+        # For all other cases, raise an Exception so that we're aware of the
+        # missing implementation.
+        raise NotImplementedError(f"Not implemented for {annotation}")
 
     def _get_mypy_fix(
         self, node: FunctionDef | Decorator
