@@ -110,7 +110,7 @@ class MypyVisitor(CSTVisitor):
         """Add a fix for missing imports."""
         print(f"Missing imports: {self._missing_imports}")
         assert all(
-            missing_import in ("QtCore, QtGui")
+            missing_import in ("QtCore", "QtGui")
             for missing_import in self._missing_imports
         )
         self.fixes.append(AddImportFix(list(set(self._missing_imports))))
