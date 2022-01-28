@@ -572,4 +572,25 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
             FixParameter("*a1", "QtCore.QPoint", None),
         ],
     ),
+    AnnotationFix(
+        "QtGui",
+        "QPolygon",
+        "putPoints",
+        [
+            FixParameter("index", "int", "int"),
+            FixParameter("firstx", "int", "int"),
+            FixParameter("firsty", "int", "int"),
+            FixParameter("*a3", "int", None),
+        ],
+    ),
+    AnnotationFix(
+        "QtGui",
+        "QPolygon",
+        "setPoints",
+        [
+            FixParameter("firstx", "int", "int"),
+            FixParameter("firsty", "int", "int"),
+            FixParameter("*a2", "int", None),
+        ],
+    ),
 ]
