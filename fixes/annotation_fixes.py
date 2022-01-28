@@ -166,7 +166,7 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
                 "typing.Type[QObjectT]",
                 "type",
             ),
-            FixParameter("name", '"str"', '"str"'),
+            FixParameter("name", "str", "str"),
             FixParameter(
                 "options", "Qt.FindChildOption", "Qt.FindChildOption"
             ),
@@ -184,7 +184,7 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
                 "typing.Tuple[typing.Type[QObjectT], ...]",
                 "typing.Tuple",
             ),
-            FixParameter("name", '"str"', '"str"'),
+            FixParameter("name", "str", "str"),
             FixParameter(
                 "options", "Qt.FindChildOption", "Qt.FindChildOption"
             ),

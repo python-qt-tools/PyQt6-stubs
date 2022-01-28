@@ -17,6 +17,7 @@ from libcst import (
     FunctionDef,
     ImportAlias,
     ImportFrom,
+    Index,
     Module,
     Name,
     Param,
@@ -24,6 +25,7 @@ from libcst import (
     SimpleStatementLine,
     SimpleStatementSuite,
     SimpleString,
+    Subscript,
     parse_expression,
     parse_statement,
 )
@@ -361,12 +363,14 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                 same_name = fix_param.name == param.name.value
                 if param.annotation is not None:
                     code = self._code(param.annotation)
-                    same_annotation = code == fix_param.annotation
+                    code = code.replace("'", '"')
+                    same_annotation = code == fix_param.current_annotation
                 else:
-                    same_annotation = fix_param.annotation is None
-                if not (same_name and same_annotation):
-                    print(f"Fix does not match due to param: {param.name}")
-                    return False
+                    same_annotation = fix_param.current_annotation is None
+                if same_name and same_annotation:
+                    break
+            else:
+                return False
         return True
 
     @staticmethod
@@ -380,11 +384,45 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                 f"{annotation.annotation.value.value}."
                 f"{annotation.annotation.attr.value}"
             )
-        if isinstance(annotation.annotation, SimpleString):
+        if isinstance(annotation.annotation, (SimpleString, Name)):
             return annotation.annotation.value
+        if isinstance(annotation.annotation, Subscript):
+            return AnnotationFixer._code_for_subscript(annotation.annotation)
         # For all other cases, raise an Exception so that we're aware of the
         # missing implementation.
         raise NotImplementedError(f"Not implemented for {annotation}")
+
+    @staticmethod
+    def _code_for_subscript(subscript: Subscript) -> str:
+        """Return the code for a Subscript."""
+        if isinstance(subscript.value, Attribute) and isinstance(
+            subscript.value.value, Name
+        ):
+            subscript_str = (
+                f"{subscript.value.value.value}."
+                f"{subscript.value.attr.value}"
+            )
+            slices = []
+            for sub_slice in subscript.slice:
+                if isinstance(sub_slice.slice, Index):
+                    if isinstance(sub_slice.slice.value, (Name, SimpleString)):
+                        slices.append(sub_slice.slice.value.value)
+                    elif isinstance(sub_slice.slice.value, Subscript):
+                        slices.append(
+                            AnnotationFixer._code_for_subscript(
+                                sub_slice.slice.value
+                            )
+                        )
+                    else:
+                        raise NotImplementedError(
+                            f"Not implemented for {sub_slice.slice.value}"
+                        )
+                else:
+                    raise NotImplementedError(
+                        f"Not implemented for {sub_slice.slice}"
+                    )
+            return f"{subscript_str}[{', '.join(slices)}]"
+        raise NotImplementedError(f"Not implemented for {subscript}")
 
     def _get_mypy_fix(
         self, node: FunctionDef | Decorator
