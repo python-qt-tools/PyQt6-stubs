@@ -26,6 +26,7 @@ from libcst import (
     SimpleStatementSuite,
     SimpleString,
     Subscript,
+    TrailingWhitespace,
     parse_expression,
     parse_statement,
 )
@@ -93,6 +94,9 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
 
         # Holds the last method for every class:
         self._last_class_method = last_class_method
+
+        # Holds the fix that will be appended to the currently visited class:
+        self._class_comment_fix: CommentFix | None = None
 
     @property
     def class_name(self) -> str | None:
@@ -167,6 +171,14 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
     def visit_ClassDef(self, node: ClassDef) -> bool:
         """Put a class on top of the stack when visiting."""
         self._last_class.append(node)
+
+        # Check if any CommentFix must be added to the class. If so, store it
+        # in `_class_comment_fix` and apply it in `leave_TrailingWhitespace`
+        for fix in self._generated_fixes:
+            if fix.node == node and isinstance(fix, CommentFix):
+                print(f"Adding '{fix.comment}' to class {node.name.value}")
+                self._class_comment_fix = fix
+
         # Visit every class in case there's a class in a class.
         return True
 
@@ -300,6 +312,24 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
         """Remove a class from the stack and return the updated node."""
         self._last_class.pop()
         return updated_node
+
+    def leave_TrailingWhitespace(
+        self,
+        original_node: "TrailingWhitespace",
+        updated_node: "TrailingWhitespace",
+    ) -> TrailingWhitespace:
+        """Leave a TrailingWhitespace and apply a CommentFix if available."""
+        if self._class_comment_fix:
+            # Create the Comment from the fix.
+            comment = Comment(self._class_comment_fix.comment)
+
+            # Remove the fix from `_generated_fixes` and `_class_comment_fix`.
+            self._generated_fixes.remove(self._class_comment_fix)
+            self._class_comment_fix = None
+
+            # Apply the fix.
+            return updated_node.with_changes(comment=comment)
+        return original_node
 
     def leave_Module(
         self, original_node: Module, updated_node: Module

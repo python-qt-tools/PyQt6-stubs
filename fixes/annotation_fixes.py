@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
-from libcst import Decorator, FunctionDef
+from libcst import ClassDef, Decorator, FunctionDef
 
 
 @dataclass
@@ -36,7 +36,7 @@ class AnnotationFix:
 class CommentFix:
     """Fixes a FunctionDef or a Decorator by appending a comment to it."""
 
-    node: Union[FunctionDef, Decorator]
+    node: Union[ClassDef, FunctionDef, Decorator]
     comment: str
 
 

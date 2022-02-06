@@ -86,12 +86,21 @@ class MypyVisitor(CSTVisitor):
                     line_nbr, MypyVisitor.ErrorType.STATIC_MISMATCH
                 )
             elif (
-                "Signature of" in error_msg
-                and "incompatible with supertype" in error_msg
-            ) or (
-                " is incompatible with supertype " in error_msg
-                or " incompatible with return type " in error_msg
+                (
+                    "Signature of" in error_msg
+                    and "incompatible with supertype" in error_msg
+                )
+                or (
+                    " is incompatible with supertype " in error_msg
+                    or " incompatible with return type " in error_msg
+                )
+                or (
+                    "is incompatible with definition in base class"
+                    in error_msg
+                )
             ):
+                # Those errors are violations of the Liskov Principle and can
+                # only be ignored, since this is valid in Qt/C++.
                 self._add_error_type(line_nbr, MypyVisitor.ErrorType.OVERRIDE)
             elif (
                 "Overloaded function signature" in error_msg
@@ -108,6 +117,7 @@ class MypyVisitor(CSTVisitor):
 
     def _add_fix_for_missing_imports(self) -> None:
         """Add a fix for missing imports."""
+        # todo: could be done with libcst.codemod.visitors.AddImportsVisitor
         print(f"Missing imports: {self._missing_imports}")
         assert all(
             missing_import in ("QtCore", "QtGui")
@@ -172,6 +182,15 @@ class MypyVisitor(CSTVisitor):
     def visit_ClassDef(self, node: ClassDef) -> bool:
         """Put a class on top of the stack when visiting."""
         self._last_class.append(node)
+
+        # Check if class needs to be fixed
+        line = self.get_metadata(PositionProvider, node).start.line
+        if line in self._errors:
+            # Currently, only override comment is supported for classes.
+            assert self._errors[line] == MypyVisitor.ErrorType.OVERRIDE
+            print(f"Adding override comment to class: {node.name.value}")
+            self.fixes.append(CommentFix(node, "# type: ignore[misc]"))
+
         # Visit every class in case there's a class in a class.
         return True
 

@@ -360,7 +360,7 @@ class QPyDesignerCustomWidgetPlugin(QtCore.QObject, QDesignerCustomWidgetInterfa
 class QPyDesignerMemberSheetExtension(QtCore.QObject, QDesignerMemberSheetExtension):
     def __init__(self, parent: QtCore.QObject) -> None: ...
 
-class QPyDesignerPropertySheetExtension(QtCore.QObject, QDesignerPropertySheetExtension):
+class QPyDesignerPropertySheetExtension(QtCore.QObject, QDesignerPropertySheetExtension):  # type: ignore[misc]
     def __init__(self, parent: QtCore.QObject) -> None: ...
 
 class QPyDesignerTaskMenuExtension(QtCore.QObject, QDesignerTaskMenuExtension):
