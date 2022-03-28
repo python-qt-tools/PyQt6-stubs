@@ -75,6 +75,6 @@ repos:
         name: mypy
         entry: mypy
         language: system
-        files: '.*\.py[i]?'
+        files: '.*\.py[i]?$'
         args: [ "--warn-unused-ignores", "--warn-redundant-casts", "--warn-unused-configs", "--namespace-packages", "--explicit-package-bases", "--config-file", "mypy.ini" ]
         exclude: ^tests
