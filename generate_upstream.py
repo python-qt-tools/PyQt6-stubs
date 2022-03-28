@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import List, Set, Tuple
 
 from libcst import MetadataWrapper, parse_module
+from mypy.stubgen import Options, generate_stubs
 
 from fixes.annotation_fixer import AnnotationFixer
 from fixes.custom_fixer import CustomFixer
@@ -57,6 +58,42 @@ def download_stubs(download_folder: Path, file_filter: List[str]) -> None:
                 copy_file = SRC_DIR / extracted_file.name
                 shutil.copyfile(extracted_file, copy_file)
                 subprocess.check_call(["git", "add", str(copy_file)])
+
+        add_uic_stubs(temp_folder)
+
+
+def add_uic_stubs(temp_folder: Path) -> None:
+    """
+    Generate and add the uic stub files.
+
+    Since the stubs for uic are missing, this will generate the stub files and
+    add it to the stubs.
+
+    Expects the temporary folder into which upstream PyQt6 was downloaded.
+    """
+    uic_files = temp_folder.joinpath("PyQt6").joinpath("uic").rglob("*.py")
+    with tempfile.TemporaryDirectory() as gen_stub_temp_folder:
+        options = Options(
+            pyversion=sys.version_info[:2],
+            no_import=False,
+            doc_dir="",
+            search_path=[],
+            interpreter="",
+            parse_only=False,
+            ignore_errors=False,
+            include_private=False,
+            output_dir=gen_stub_temp_folder,
+            modules=[],
+            packages=[],
+            files=[str(file) for file in uic_files],
+            verbose=False,
+            quiet=False,
+            export_less=False,
+        )
+        generate_stubs(options)
+        uic_path = SRC_DIR / "uic"
+        shutil.rmtree(uic_path)
+        shutil.copytree(Path(gen_stub_temp_folder) / "PyQt6" / "uic", uic_path)
 
 
 if __name__ == "__main__":
