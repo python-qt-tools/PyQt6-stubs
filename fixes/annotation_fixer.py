@@ -221,8 +221,7 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
             return updated_node
 
         # Check if we can fix the function.
-        function_fix = self._get_fix()
-        if function_fix:
+        if function_fix := self._get_fix():
             # Check every parameter and find the appropriate one to fix in the
             # source code.
             for param in function_fix.params:
@@ -250,8 +249,7 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
             self._last_function.pop()
             return updated_node
 
-        mypy_fix = self._get_mypy_fix(original_node)
-        if mypy_fix:
+        if mypy_fix := self._get_mypy_fix(original_node):
             # If we have two fixes, this might have unforeseen consequences.
             assert not function_fix
             if isinstance(mypy_fix, CommentFix):
@@ -265,6 +263,8 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                 assert original_node == mypy_fix.node
                 return_value = RemovalSentinel.REMOVE
                 self._generated_fixes.remove(mypy_fix)
+            else:
+                raise ValueError(f"Got an unknown fix type: {type(mypy_fix)}")
             self._last_function.pop()
             return return_value
 
@@ -409,11 +409,14 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
         if isinstance(annotation.annotation, Attribute) and hasattr(
             annotation.annotation, "dot"
         ):
-            assert isinstance(annotation.annotation.value, Name)
-            return (
-                f"{annotation.annotation.value.value}."
-                f"{annotation.annotation.attr.value}"
-            )
+            if isinstance(annotation.annotation.value, Attribute):
+                # This is the case, when having something like
+                # QtCore.Qt.GestureType
+                attr_str = AnnotationFixer._attribute_code(
+                    annotation.annotation.value
+                )
+                return f"{attr_str}.{annotation.annotation.attr.value}"
+            return AnnotationFixer._attribute_code(annotation.annotation)
         if isinstance(annotation.annotation, (SimpleString, Name)):
             return annotation.annotation.value
         if isinstance(annotation.annotation, Subscript):
@@ -421,6 +424,12 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
         # For all other cases, raise an Exception so that we're aware of the
         # missing implementation.
         raise NotImplementedError(f"Not implemented for {annotation}")
+
+    @staticmethod
+    def _attribute_code(attribute: Attribute) -> str:
+        """Return the Attribute as str."""
+        assert isinstance(attribute.value, Name)
+        return f"{attribute.value.value}." f"{attribute.attr.value}"
 
     @staticmethod
     def _code_for_subscript(subscript: Subscript) -> str:
