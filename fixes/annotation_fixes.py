@@ -593,4 +593,136 @@ ANNOTATION_FIXES: List[Union[AnnotationFix, AddAnnotationFix]] = [
             FixParameter("*a2", "int", None),
         ],
     ),
+    AnnotationFix(
+        "QtWidgets",
+        "QWidget",
+        "ungrabGesture",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QWidget",
+        "grabGesture",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+            FixParameter(
+                "flags", "QtCore.Qt.GestureFlag", "QtCore.Qt.GestureFlag"
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGesture",
+        "gestureType",
+        [],
+        return_value="QtCore.Qt.GestureType",
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureEvent",
+        "ignore",
+        [
+            FixParameter("a0", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureEvent",
+        "accept",
+        [
+            FixParameter("a0", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureEvent",
+        "isAccepted",
+        [
+            FixParameter("a0", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureEvent",
+        "setAccepted",
+        [
+            FixParameter("a0", "QtCore.Qt.GestureType", "int"),
+            FixParameter("a1", "bool", "bool"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureEvent",
+        "gesture",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureRecognizer",
+        "unregisterRecognizer",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+        ],
+        static=True,
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGestureRecognizer",
+        "registerRecognizer",
+        [
+            FixParameter(
+                "recognizer", '"QGestureRecognizer"', '"QGestureRecognizer"'
+            ),
+        ],
+        return_value="QtCore.Qt.GestureType",
+        static=True,
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGraphicsObject",
+        "ungrabGesture",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QGraphicsObject",
+        "grabGesture",
+        [
+            FixParameter("type", "QtCore.Qt.GestureType", "int"),
+            FixParameter(
+                "flags", "QtCore.Qt.GestureFlag", "QtCore.Qt.GestureFlag"
+            ),
+        ],
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QScroller",
+        "grabbedGesture",
+        [
+            FixParameter("target", "QtCore.QObject", "QtCore.QObject"),
+        ],
+        return_value="QtCore.Qt.GestureType",
+        static=True,
+    ),
+    AnnotationFix(
+        "QtWidgets",
+        "QScroller",
+        "grabGesture",
+        [
+            FixParameter("target", "QtCore.QObject", "QtCore.QObject"),
+            FixParameter(
+                "scrollGestureType",
+                '"QScroller.ScrollerGestureType"',
+                '"QScroller.ScrollerGestureType"',
+            ),
+        ],
+        return_value="QtCore.Qt.GestureType",
+        static=True,
+    ),
 ]
