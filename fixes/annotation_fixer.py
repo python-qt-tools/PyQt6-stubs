@@ -428,24 +428,28 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _attribute_code(attribute: Attribute) -> str:
         """Return the Attribute as str."""
-        assert isinstance(attribute.value, Name)
-        return f"{attribute.value.value}." f"{attribute.attr.value}"
+        if isinstance(attribute.value, Name):
+            name = attribute.value.value
+        elif isinstance(attribute.value, Attribute):
+            name = AnnotationFixer._attribute_code(attribute.value)
+        else:
+            raise NotImplementedError(f"Not implemented for {attribute}")
+        return f"{name}.{attribute.attr.value}"
 
     @staticmethod
     def _code_for_subscript(subscript: Subscript) -> str:
         """Return the code for a Subscript."""
-        if isinstance(subscript.value, Attribute) and isinstance(
-            subscript.value.value, Name
-        ):
-            subscript_str = (
-                f"{subscript.value.value.value}."
-                f"{subscript.value.attr.value}"
-            )
+        if isinstance(subscript.value, Attribute):
+            subscript_str = AnnotationFixer._attribute_code(subscript.value)
             slices = []
             for sub_slice in subscript.slice:
                 if isinstance(sub_slice.slice, Index):
                     if isinstance(sub_slice.slice.value, (Name, SimpleString)):
                         slices.append(sub_slice.slice.value.value)
+                    elif isinstance(sub_slice.slice.value, Attribute):
+                        slices.append(
+                            AnnotationFixer._attribute_code(sub_slice.slice.value)
+                        )
                     elif isinstance(sub_slice.slice.value, Subscript):
                         slices.append(
                             AnnotationFixer._code_for_subscript(
