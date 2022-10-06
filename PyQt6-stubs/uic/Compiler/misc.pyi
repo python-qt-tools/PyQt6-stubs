@@ -1,8 +1,8 @@
-from typing import Any
+from _typeshed import Incomplete
 
 def moduleMember(module, name): ...
 
 class Literal:
-    string: Any
+    string: Incomplete
     def __init__(self, string) -> None: ...
     def __or__(self, r_op): ...

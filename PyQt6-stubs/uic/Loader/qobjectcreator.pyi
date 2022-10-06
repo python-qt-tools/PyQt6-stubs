@@ -1,5 +1,4 @@
-from typing import Any
-
+from _typeshed import Incomplete
 from PyQt6 import QtGui as QtGui
 from PyQt6 import QtWidgets as QtWidgets
 
@@ -8,10 +7,10 @@ class _QtWrapper:
     def search(cls, name): ...
 
 class _QtGuiWrapper(_QtWrapper):
-    module: Any
+    module: Incomplete
 
 class _QtWidgetsWrapper(_QtWrapper):
-    module: Any
+    module: Incomplete
 
 class _ModuleWrapper:
     def __init__(self, moduleName, classes) -> None: ...
