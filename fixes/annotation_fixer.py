@@ -355,8 +355,8 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
                     not fix.static and child_count - 1 != len(fix.params)
                 ):
                     # If the number of Parameters does not match the number of
-                    # Parameters to fix, we return.
-                    return None
+                    # Parameters to fix, continue to next potential fix.
+                    continue
 
                 if not self._check_parameters(fix):
                     continue
