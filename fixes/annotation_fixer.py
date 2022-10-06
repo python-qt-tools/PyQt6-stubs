@@ -30,6 +30,7 @@ from libcst import (
     parse_expression,
     parse_statement,
 )
+from libcst.helpers import get_full_name_for_node
 from libcst.metadata import PositionProvider
 
 from fixes.annotation_fixes import (
@@ -434,18 +435,15 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def _code_for_subscript(subscript: Subscript) -> str:
         """Return the code for a Subscript."""
-        if isinstance(subscript.value, Attribute) and isinstance(
-            subscript.value.value, Name
-        ):
-            subscript_str = (
-                f"{subscript.value.value.value}."
-                f"{subscript.value.attr.value}"
-            )
+        if isinstance(subscript.value, Attribute):
+            subscript_str = get_full_name_for_node(subscript.value)
             slices = []
             for sub_slice in subscript.slice:
                 if isinstance(sub_slice.slice, Index):
                     if isinstance(sub_slice.slice.value, (Name, SimpleString)):
                         slices.append(sub_slice.slice.value.value)
+                    elif isinstance(sub_slice.slice.value, Attribute):
+                        slices.append(get_full_name_for_node(sub_slice.slice.value))
                     elif isinstance(sub_slice.slice.value, Subscript):
                         slices.append(
                             AnnotationFixer._code_for_subscript(

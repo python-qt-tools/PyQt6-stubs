@@ -76,7 +76,7 @@ class MypyVisitor(CSTVisitor):
                 continue
 
             match = self.RE_NAME_NOT_DEFINED.match(error_msg)
-            if match:
+            if match and match.group(1) != "QMenu":
                 self._missing_imports.append(match.group(1))
             elif error_msg == (
                 'Overload does not consistently use the "@staticmethod" '
