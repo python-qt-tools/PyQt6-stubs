@@ -1,4 +1,5 @@
 """Generate the upstream stubs."""
+import contextlib
 import re
 import shutil
 import subprocess
@@ -7,8 +8,9 @@ import tempfile
 import zipfile
 from pathlib import Path
 from tempfile import mkdtemp
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Generator, ContextManager
 
+import click
 from libcst import MetadataWrapper, parse_module
 from mypy.stubgen import Options, generate_stubs
 
@@ -97,23 +99,37 @@ def add_uic_stubs(temp_folder: Path) -> None:
     shutil.copytree(Path(gen_stub_temp_folder) / "PyQt6" / "uic", uic_path)
 
 
-def generate_stubs_from_upstream():
-    files = []
-    for arg in sys.argv[1:]:
-        print(f"Adding file to process list: {arg}")
-        files.append(arg)
+def _yield_temp_dir(ctx, param, value) -> ContextManager[Path]:
+    if value:
+        return contextlib.nullcontext(Path(value))
+    else:
+        return tempfile.TemporaryDirectory()
+
+
+@click.command()
+@click.option(
+    "--tmpdir",
+    "-t",
+    "tmpdir_context",
+    callback=_yield_temp_dir,
+    help="Use as temporary directory, for debugging",
+)
+@click.argument('file', nargs=-1)
+def generate_stubs_from_upstream(tmpdir_context: ContextManager[Path], file: tuple[str, ...]):
+    files = list(file)
+    for file in files:
+        print(f"Adding file to process list: {file}")
 
     # Create PyQt6-stubs folder if necessary
     SRC_DIR.mkdir(exist_ok=True)
 
     # Update pip just in case
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "--upgrade", "pip"]
-    )
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", "pip"])
 
     # Download required packages
-    with tempfile.TemporaryDirectory() as temp_dwld_folder:
-        download_stubs(Path(temp_dwld_folder), files)
+    with tmpdir_context as temp_download_folder:
+        print(f"Using {temp_download_folder} as base temporary folder")
+        download_stubs(Path(temp_download_folder), files)
 
     # Now apply the fixes:
     for file in SRC_DIR.glob("*.pyi"):
@@ -149,13 +165,9 @@ def generate_stubs_from_upstream():
 
     # Lint the files with iSort and Black
     print("Fixing files with iSort")
-    subprocess.check_call(
-        ["isort", "--profile", "black", "-l 10000", str(SRC_DIR)]
-    )
+    subprocess.check_call(["isort", "--profile", "black", "-l 10000", str(SRC_DIR)])
     print("Fixing files with Black")
-    subprocess.check_call(
-        ["black", "--safe", "--quiet", "-l 10000", str(SRC_DIR)]
-    )
+    subprocess.check_call(["black", "--safe", "--quiet", "-l 10000", str(SRC_DIR)])
 
 
 if __name__ == "__main__":
