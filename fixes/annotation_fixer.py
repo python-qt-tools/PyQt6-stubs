@@ -30,6 +30,7 @@ from libcst import (
     parse_expression,
     parse_statement,
 )
+from libcst.helpers import get_full_name_for_node, get_full_name_for_node_or_raise
 from libcst.metadata import PositionProvider
 
 from fixes.annotation_fixes import (
@@ -425,43 +426,34 @@ class AnnotationFixer(  # pylint: disable=too-many-instance-attributes
         # missing implementation.
         raise NotImplementedError(f"Not implemented for {annotation}")
 
-    @staticmethod
-    def _attribute_code(attribute: Attribute) -> str:
+    @classmethod
+    def _attribute_code(cls, attribute: Attribute) -> str:
         """Return the Attribute as str."""
-        assert isinstance(attribute.value, Name)
-        return f"{attribute.value.value}." f"{attribute.attr.value}"
+        return get_full_name_for_node_or_raise(attribute)
 
-    @staticmethod
-    def _code_for_subscript(subscript: Subscript) -> str:
+    @classmethod
+    def _code_for_subscript(cls, subscript: Subscript) -> str:
         """Return the code for a Subscript."""
-        if isinstance(subscript.value, Attribute) and isinstance(
-            subscript.value.value, Name
-        ):
-            subscript_str = (
-                f"{subscript.value.value.value}."
-                f"{subscript.value.attr.value}"
-            )
-            slices = []
-            for sub_slice in subscript.slice:
-                if isinstance(sub_slice.slice, Index):
-                    if isinstance(sub_slice.slice.value, (Name, SimpleString)):
-                        slices.append(sub_slice.slice.value.value)
-                    elif isinstance(sub_slice.slice.value, Subscript):
-                        slices.append(
-                            AnnotationFixer._code_for_subscript(
-                                sub_slice.slice.value
-                            )
-                        )
-                    else:
-                        raise NotImplementedError(
-                            f"Not implemented for {sub_slice.slice.value}"
-                        )
-                else:
-                    raise NotImplementedError(
-                        f"Not implemented for {sub_slice.slice}"
+        subscript_str = get_full_name_for_node_or_raise(subscript.value)
+        slices = []
+        for sub_slice in subscript.slice:
+            slice_node = sub_slice.slice
+            if isinstance(slice_node, Index):
+                if isinstance(slice_node.value, Subscript):
+                    slices.append(
+                        cls._code_for_subscript(slice_node.value)
                     )
-            return f"{subscript_str}[{', '.join(slices)}]"
-        raise NotImplementedError(f"Not implemented for {subscript}")
+                elif isinstance(slice_node.value, SimpleString):
+                    slices.append(slice_node.value.value)
+                else:
+                    slices.append(
+                        get_full_name_for_node_or_raise(slice_node.value)
+                    )
+            else:
+                raise NotImplementedError(
+                    f"Not implemented for {slice_node}"
+                )
+        return f"{subscript_str}[{', '.join(slices)}]"
 
     def _get_mypy_fix(
         self, node: FunctionDef | Decorator

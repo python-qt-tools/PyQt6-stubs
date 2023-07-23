@@ -5,3 +5,6 @@ pylint==2.13.2
 PyQt6==6.2.3
 pytest==7.1.1
 setuptools==60.5.0
+black==22.12.0
+wheel==0.38.4
+click==8.1.3
