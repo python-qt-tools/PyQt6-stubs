@@ -1,17 +1,17 @@
-from typing import Any
+from _typeshed import Incomplete
 
 from .objcreator import QObjectCreator as QObjectCreator
 from .properties import Properties as Properties
 from .ui_file import UIFile as UIFile
 
-logger: Any
-DEBUG: Any
-QtCore: Any
-QtGui: Any
-QtWidgets: Any
+logger: Incomplete
+DEBUG: Incomplete
+QtCore: Incomplete
+QtGui: Incomplete
+QtWidgets: Incomplete
 
 class WidgetStack(list):
-    topwidget: Any
+    topwidget: Incomplete
     def push(self, item) -> None: ...
     def popLayout(self): ...
     def popWidget(self): ...
@@ -21,29 +21,29 @@ class WidgetStack(list):
 
 class ButtonGroup:
     exclusive: bool
-    object: Any
+    object: Incomplete
     def __init__(self) -> None: ...
 
 class UIParser:
-    factory: Any
-    wprops: Any
+    factory: Incomplete
+    wprops: Incomplete
     def __init__(self, qtcore_module, qtgui_module, qtwidgets_module, creatorPolicy) -> None: ...
     def uniqueName(self, name): ...
-    toplevelWidget: Any
-    stack: Any
-    name_suffixes: Any
-    defaults: Any
-    actions: Any
-    currentActionGroup: Any
-    button_groups: Any
+    toplevelWidget: Incomplete
+    stack: Incomplete
+    name_suffixes: Incomplete
+    defaults: Incomplete
+    actions: Incomplete
+    currentActionGroup: Incomplete
+    button_groups: Incomplete
     def reset(self) -> None: ...
     def setupObject(self, clsname, parent, branch, is_attribute: bool = ...): ...
     def getProperty(self, elem, name): ...
     column_counter: int
     row_counter: int
     item_nr: int
-    itemstack: Any
-    sorting_enabled: Any
+    itemstack: Incomplete
+    sorting_enabled: Incomplete
     def createWidget(self, elem) -> None: ...
     def handleHeaderView(self, elem, name, header) -> None: ...
     def createSpacer(self, elem) -> None: ...
@@ -60,7 +60,7 @@ class UIParser:
     def setZOrder(self, elem) -> None: ...
     def createAction(self, elem) -> None: ...
     def createActionGroup(self, elem) -> None: ...
-    widgetTreeItemHandlers: Any
+    widgetTreeItemHandlers: Incomplete
     def traverseWidgetTree(self, elem) -> None: ...
     def addActions(self) -> None: ...
     def setDelayedProps(self) -> None: ...
@@ -68,5 +68,5 @@ class UIParser:
     def setContext(self, context) -> None: ...
     def createToplevelWidget(self, classname, widgetname) -> None: ...
     def finalize(self) -> None: ...
-    uiname: Any
+    uiname: Incomplete
     def parse(self, filename): ...

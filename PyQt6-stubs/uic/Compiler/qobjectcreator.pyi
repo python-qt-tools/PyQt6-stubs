@@ -1,4 +1,4 @@
-from typing import Any
+from _typeshed import Incomplete
 
 from .as_string import as_string as as_string
 from .indenter import write_code as write_code
@@ -7,18 +7,18 @@ from .qtproxies import QtGui as QtGui
 from .qtproxies import QtWidgets as QtWidgets
 from .qtproxies import strict_getattr as strict_getattr
 
-logger: Any
-DEBUG: Any
+logger: Incomplete
+DEBUG: Incomplete
 
 class _QtWrapper:
     @classmethod
     def search(cls, name): ...
 
 class _QtGuiWrapper(_QtWrapper):
-    module: Any
+    module: Incomplete
 
 class _QtWidgetsWrapper(_QtWrapper):
-    module: Any
+    module: Incomplete
 
 class _ModuleWrapper:
     def __init__(self, name, classes) -> None: ...

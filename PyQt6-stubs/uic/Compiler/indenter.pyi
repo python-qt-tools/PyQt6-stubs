@@ -1,10 +1,10 @@
-from typing import Any
+from _typeshed import Incomplete
 
 indentwidth: int
 
 class _IndentedCodeWriter:
     level: int
-    output: Any
+    output: Incomplete
     def __init__(self, output) -> None: ...
     def indent(self) -> None: ...
     def dedent(self) -> None: ...

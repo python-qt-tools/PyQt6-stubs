@@ -1,51 +1,51 @@
-from typing import Any
+from _typeshed import Incomplete
 
 from .enum_map import EnumMap as EnumMap
 from .exceptions import NoSuchClassError as NoSuchClassError
 from .exceptions import UnsupportedPropertyError as UnsupportedPropertyError
 from .icon_cache import IconCache as IconCache
 
-logger: Any
-DEBUG: Any
-QtCore: Any
-QtGui: Any
-QtWidgets: Any
+logger: Incomplete
+DEBUG: Incomplete
+QtCore: Incomplete
+QtGui: Incomplete
+QtWidgets: Incomplete
 
 def int_list(prop): ...
 def float_list(prop): ...
 
-bool_: Any
+bool_: Incomplete
 
 def qfont_style_strategy(v): ...
 def needsWidget(func): ...
 def ascii_upper(s): ...
 
 class Properties:
-    factory: Any
+    factory: Incomplete
     def __init__(self, factory, qtcore_module, qtgui_module, qtwidgets_module) -> None: ...
     def set_base_dir(self, base_dir) -> None: ...
-    buddies: Any
-    delayed_props: Any
-    icon_cache: Any
+    buddies: Incomplete
+    delayed_props: Incomplete
+    icon_cache: Incomplete
     def reset(self) -> None: ...
-    def convert(self, prop, widget: Any | None = ...): ...
-    def getProperty(self, elem, name, default: Any | None = ...): ...
-    def getAttribute(self, elem, name, default: Any | None = ...): ...
+    def convert(self, prop, widget: Incomplete | None = ...): ...
+    def getProperty(self, elem, name, default: Incomplete | None = ...): ...
+    def getAttribute(self, elem, name, default: Incomplete | None = ...): ...
     def setProperties(self, widget, elem) -> None: ...
-    currentIndex: Any
-    currentRow: Any
-    showDropIndicator: Any
-    intValue: Any
-    value: Any
-    objectName: Any
-    margin: Any
-    leftMargin: Any
-    topMargin: Any
-    rightMargin: Any
-    bottomMargin: Any
-    spacing: Any
-    horizontalSpacing: Any
-    verticalSpacing: Any
+    currentIndex: Incomplete
+    currentRow: Incomplete
+    showDropIndicator: Incomplete
+    intValue: Incomplete
+    value: Incomplete
+    objectName: Incomplete
+    margin: Incomplete
+    leftMargin: Incomplete
+    topMargin: Incomplete
+    rightMargin: Incomplete
+    bottomMargin: Incomplete
+    spacing: Incomplete
+    horizontalSpacing: Incomplete
+    verticalSpacing: Incomplete
     def tabSpacing(self, widget, prop) -> None: ...
     def buddy(self, widget, prop) -> None: ...
     def geometry(self, widget, prop) -> None: ...

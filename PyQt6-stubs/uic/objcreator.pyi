@@ -1,9 +1,9 @@
-from typing import Any
+from _typeshed import Incomplete
 
 from .exceptions import NoSuchWidgetError as NoSuchWidgetError
 from .exceptions import WidgetPluginError as WidgetPluginError
 
-widgetPluginPath: Any
+widgetPluginPath: Incomplete
 MATCH: bool
 NO_MATCH: bool
 MODULE: int
