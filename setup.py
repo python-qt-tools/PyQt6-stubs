@@ -11,6 +11,7 @@ setup(
     description="PEP561 stub files for the PyQt6 framework",
     version=".".join((str(nbr) for nbr in PYQT_VERSION + (STUB_VERSION,))),
     python_requires=">= 3.6",
+    extras_require={"pyqt6": ["PyQt6"]},
     package_data={
         "PyQt6-stubs": ["*.pyi"],
         "PyQt6-stubs/uic": ["*.pyi"],

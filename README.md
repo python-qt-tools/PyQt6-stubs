@@ -13,10 +13,15 @@ Please note that this work is far from complete. You can use the stubs to get ri
 
 **WARNING: The Stubs are not yet on pypi**
 
-Clone the latest version from Github and install it via Python setuptools:
+Clone the latest version from Github and install the stubs without installing PyQt6:
 
     $ git clone https://github.com/TilmanK/PyQt6-stubs
-    $ python setup.py install
+    $ cd PyQt6-stubs
+    $ pip install .
+
+To also install the PyQt6 binding, use the `pyqt6` extra from the cloned repository:
+
+    $ pip install ".[pyqt6]"
 
 # Generation of stubs
 
