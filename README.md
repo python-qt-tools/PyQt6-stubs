@@ -13,10 +13,19 @@ Please note that this work is far from complete. You can use the stubs to get ri
 
 **WARNING: The Stubs are not yet on pypi**
 
-Clone the latest version from Github and install it via Python setuptools:
+Clone the latest version from Github and install the stubs:
 
     $ git clone https://github.com/TilmanK/PyQt6-stubs
-    $ python setup.py install
+    $ cd PyQt6-stubs
+    $ pip install .
+
+To opt into enforcement of any declared PyQt6 version compatibility constraints,
+select the `pyqt6` extra from the cloned repository:
+
+    $ pip install ".[pyqt6]"
+
+The extra currently declares no PyQt6 version bounds. Selecting it may also
+cause pip to install PyQt6 as a side effect of satisfying the dependency.
 
 # Generation of stubs
 
